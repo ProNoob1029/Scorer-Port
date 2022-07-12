@@ -10,7 +10,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,14 +21,18 @@ import com.dragos.scorerport.ui.theme.ScorerPortTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
-            ScorerPortTheme {
+            var dynamicColor by remember{ mutableStateOf(false) }
+            ScorerPortTheme(dynamicColor = dynamicColor) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Conversation(nr = 100)
+                    Conversation(nr = 100, onAction = {
+                        dynamicColor = !dynamicColor
+                    })
                 }
             }
         }
@@ -38,7 +42,11 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun MatchCard(match: MatchDisplay, index: Int){
+fun MatchCard(
+    match: MatchDisplay,
+    index: Int,
+    onClick: () -> Unit,
+){
     Box(modifier = Modifier.padding(top = 8.dp, start = 8.dp, end = 8.dp)) {
         Surface(
             shape = MaterialTheme.shapes.large,
@@ -48,7 +56,7 @@ fun MatchCard(match: MatchDisplay, index: Int){
                 modifier = Modifier
                     .fillMaxWidth(1f)
                     .clip(shape = MaterialTheme.shapes.large)
-                    .clickable { },
+                    .clickable {onClick()},
                 color = MaterialTheme.colorScheme.secondaryContainer,
                 shape = MaterialTheme.shapes.large,
             ) {
@@ -82,7 +90,10 @@ fun MatchCard(match: MatchDisplay, index: Int){
 }
 
 @Composable
-fun Conversation(nr: Int){
+fun Conversation(
+    nr: Int,
+    onAction: () -> Unit,
+){
     LazyColumn {
         items(nr){
             index ->
@@ -92,7 +103,8 @@ fun Conversation(nr: Int){
                     "12pm",
                     "135 points"
                 ),
-                index
+                index,
+                onClick = {onAction()}
             )
         }
 
@@ -115,7 +127,7 @@ fun DefaultPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            Conversation(nr = 20)
+            Conversation(nr = 20, onAction = {})
         }
     }
 }
