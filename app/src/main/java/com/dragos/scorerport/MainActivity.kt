@@ -2,18 +2,20 @@ package com.dragos.scorerport
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -22,67 +24,23 @@ import com.dragos.scorerport.ui.theme.ScorerPortTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             val viewModel = viewModel<AppViewModel>()
+            val haptic = LocalHapticFeedback.current
             ScorerPortTheme(dynamicColor = viewModel.dynamicColorEnabled) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Conversation(nr = 100, onAction = {
+                    Conversation(viewModel.matchList){
                         viewModel.dynamicColorEnabled = !viewModel.dynamicColorEnabled
-                    })
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    }
                 }
-            }
-        }
-    }
-}
-
-
-
-@Composable
-fun MatchCard(
-    match: MatchDisplay,
-    index: Int,
-    onClick: () -> Unit,
-){
-    Box(modifier = Modifier.padding(top = 8.dp, start = 8.dp, end = 8.dp)) {
-        Surface(
-            shape = MaterialTheme.shapes.large,
-            shadowElevation = 2.dp,
-        ) {
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth(1f)
-                    .clip(shape = MaterialTheme.shapes.large)
-                    .clickable {onClick()},
-                color = MaterialTheme.colorScheme.secondaryContainer,
-                shape = MaterialTheme.shapes.large,
-            ) {
-                Row(
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = (index + 1).toString().plus(". ").plus(match.name),
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier
-                            .weight(2f)
-                    )
-
-                    Column(
-                        horizontalAlignment = Alignment.End
-                    ){
-                        Text(
-                            text = match.time,
-                            style = MaterialTheme.typography.bodyLarge,
-                        )
-                        Text(
-                            text = match.points,
-                            style = MaterialTheme.typography.bodyLarge,
-                        )
+                viewModel.message.observe(this) { event ->
+                    event.getContentIfNotHandled()?.let {
+                        Toast.makeText(this, it, Toast.LENGTH_LONG).show()
                     }
                 }
             }
@@ -92,23 +50,22 @@ fun MatchCard(
 
 @Composable
 fun Conversation(
-    nr: Int,
+    matchList: List<MatchDisplay>,
     onAction: () -> Unit,
-){
+) {
     LazyColumn {
-        items(nr){
-            index ->
+        itemsIndexed(
+            items = matchList,
+            key = { _, matchDisplay: MatchDisplay ->
+                matchDisplay.key
+            }
+        ) { index: Int , matchDisplay: MatchDisplay ->
             MatchCard(
-                match = MatchDisplay(
-                    "Phoenix",
-                    "12pm",
-                    "135 points"
-                ),
-                index,
-                onClick = {onAction()}
+                match = matchDisplay,
+                index = index,
+                onClick = {onAction()},
             )
         }
-
         item {
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -128,9 +85,7 @@ fun DefaultPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            Conversation(nr = 20, onAction = {})
+            //Conversation(onAction = {})
         }
     }
 }
-
-data class MatchDisplay(val name: String, val time: String, var points: String)
