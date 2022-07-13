@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dragos.scorerport.ui.theme.ScorerPortTheme
 
 class MainActivity : ComponentActivity() {
@@ -23,15 +24,15 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            var dynamicColor by remember{ mutableStateOf(false) }
-            ScorerPortTheme(dynamicColor = dynamicColor) {
+            val viewModel = viewModel<AppViewModel>()
+            ScorerPortTheme(dynamicColor = viewModel.dynamicColorEnabled) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Conversation(nr = 100, onAction = {
-                        dynamicColor = !dynamicColor
+                        viewModel.dynamicColorEnabled = !viewModel.dynamicColorEnabled
                     })
                 }
             }
