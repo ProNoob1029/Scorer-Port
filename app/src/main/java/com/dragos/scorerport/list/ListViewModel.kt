@@ -1,12 +1,15 @@
-package com.dragos.scorerport
+package com.dragos.scorerport.list
 
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.dragos.scorerport.DatabaseResult
+import com.dragos.scorerport.MatchDisplay
+import com.dragos.scorerport.newMatchDisplay
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -14,16 +17,20 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 
-class AppViewModel: ViewModel() {
+class ListViewModel: ViewModel() {
+
+    private val _sharedFlow = MutableSharedFlow<ScreenEvents>()
+    val sharedFlow = _sharedFlow.asSharedFlow()
+
     var dynamicColorEnabled by mutableStateOf(false)
 
     val matchList = mutableStateListOf<MatchDisplay>()
 
-    private val statusMessage = MutableLiveData<Event<String>>()
-
-    val message : LiveData<Event<String>>
-        get() = statusMessage
+    private var database: DatabaseReference = Firebase.database.reference.child("test")
 
     private val childEventListener = object : ChildEventListener {
         override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
@@ -43,16 +50,10 @@ class AppViewModel: ViewModel() {
             // comment and if so displayed the changed comment.
             val databaseResult = dataSnapshot.getValue<DatabaseResult>() ?: return
             if(dataSnapshot.key == null) return
-            val matchDisplay = matchList.find{ it.key == dataSnapshot.key!! }
-            matchList.remove(matchDisplay)
-            matchDisplay?.set(
-                newName = databaseResult.name,
-                newTime = databaseResult.time,
-                newPoints = databaseResult.points
-            )
-            if (matchDisplay != null) {
-                matchList.add(matchDisplay)
-            }
+            val key: String = dataSnapshot.key!!
+            val index = matchList.indexOf( matchList.find{ it.key == key } )
+            val matchDisplay: MatchDisplay = newMatchDisplay(databaseResult, key)
+            matchList[index] = matchDisplay
         }
 
         override fun onChildRemoved(dataSnapshot: DataSnapshot) {
@@ -60,6 +61,7 @@ class AppViewModel: ViewModel() {
 
             // A comment has changed, use the key to determine if we are displaying this
             // comment and if so remove it.
+
             if(dataSnapshot.key == null) return
             matchList.remove(matchList.find { it.key == dataSnapshot.key!! })
         }
@@ -73,35 +75,23 @@ class AppViewModel: ViewModel() {
 
         override fun onCancelled(databaseError: DatabaseError) {
             //Log.w(TAG, "postComments:onCancelled", databaseError.toException())
-            statusMessage.value = Event("Failed to load matches.")
+
+            viewModelScope.launch {
+                _sharedFlow.emit(
+                    ScreenEvents.ShowToast(
+                        "Failed to load matches.",
+                        Toast.LENGTH_LONG
+                    )
+                )
+            }
         }
     }
-
-    private var database: DatabaseReference = Firebase.database.reference.child("matchList")
 
     init {
-        database.addChildEventListener(childEventListener)
-    }
-}
-
-open class Event<out T>(private val content: T) {
-
-    private var hasBeenHandled = false
-
-    /**
-     * Returns the content and prevents its use again.
-     */
-    fun getContentIfNotHandled(): T? {
-        return if (hasBeenHandled) {
-            null
-        } else {
-            hasBeenHandled = true
-            content
-        }
+        database.orderByKey().addChildEventListener(childEventListener)
     }
 
-    /**
-     * Returns the content, even if it's already been handled.
-     */
-    //fun peekContent(): T = content
+    sealed class ScreenEvents {
+        data class ShowToast(val message: String, val length: Int): ScreenEvents()
+    }
 }
