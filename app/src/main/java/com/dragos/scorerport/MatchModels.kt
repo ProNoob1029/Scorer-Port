@@ -1,6 +1,6 @@
 package com.dragos.scorerport
 
-import android.support.annotation.Keep
+import androidx.annotation.Keep
 
 data class MatchDisplay(var name: String, var time: String, var points: Int , var key: String){
     fun set(newName: String, newTime: String, newPoints: Int){
