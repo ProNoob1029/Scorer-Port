@@ -14,26 +14,26 @@ import com.dragos.scorerport.ui.theme.ScorerPortTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             val viewModel = hiltViewModel<ListViewModel>()
             val haptic = LocalHapticFeedback.current
-            ScorerPortTheme(dynamicColor = viewModel.dynamicColorEnabled) {
+            ScorerPortTheme(dynamicColor = viewModel.app.dynamicColorEnabled) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     MatchList(
-                        viewModel.matchList,
+                        viewModel.database.matchList,
                         onClick = {
-                            viewModel.dynamicColorEnabled = true
+                            viewModel.app.dynamicColorEnabled = true
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         },
                         onHold = {
-                            viewModel.dynamicColorEnabled = false
+                            viewModel.app.dynamicColorEnabled = false
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         },
                     )

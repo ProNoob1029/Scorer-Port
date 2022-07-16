@@ -62,7 +62,7 @@ class Database (
         override fun onCancelled(databaseError: DatabaseError) {
             //Log.w(TAG, "postComments:onCancelled", databaseError.toException())
 
-            Toast.makeText(appContext , "Failed to load matches.", Toast.LENGTH_LONG).show()
+            Toast.makeText(appContext , databaseError.toString(), Toast.LENGTH_LONG).show()
         }
     }
 
