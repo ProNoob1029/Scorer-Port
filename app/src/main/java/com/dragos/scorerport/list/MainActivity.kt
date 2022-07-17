@@ -38,16 +38,6 @@ class MainActivity: ComponentActivity() {
                         },
                     )
                 }
-
-                /*LaunchedEffect(key1 = true) {
-                    viewModel.sharedFlow.collect { event ->
-                        when(event) {
-                            is ListViewModel.ScreenEvents.ShowToast -> {
-                                Toast.makeText(context , event.message, event.length).show()
-                            }
-                        }
-                    }
-                }*/
             }
         }
     }

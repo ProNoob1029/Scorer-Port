@@ -1,6 +1,5 @@
 package com.dragos.scorerport
 
-import android.app.Application
 import android.widget.Toast
 import androidx.compose.runtime.mutableStateListOf
 import com.google.firebase.database.ChildEventListener
@@ -12,7 +11,7 @@ import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 
 class Database (
-    private val appContext: Application
+    private val appContext: App
 ) {
     var matchList = mutableStateListOf<MatchDisplay>()
 
