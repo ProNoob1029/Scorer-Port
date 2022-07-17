@@ -14,8 +14,30 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.hapticfeedback.HapticFeedback
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.unit.dp
 import com.dragos.scorerport.MatchDisplay
+
+@Composable
+fun MainActivityCompose(
+    viewModel: ListViewModel,
+    hapticContext: HapticFeedback,
+) {
+    MatchList(
+        viewModel.database.matchList,
+        onClick = {
+            viewModel.app.dynamicColorEnabled = true
+            viewModel.app.sharedPreferences.edit().putBoolean("dynamicColorEnabled", true).apply()
+            hapticContext.performHapticFeedback(HapticFeedbackType.LongPress)
+        },
+        onHold = {
+            viewModel.app.dynamicColorEnabled = false
+            viewModel.app.sharedPreferences.edit().putBoolean("dynamicColorEnabled", false).apply()
+            hapticContext.performHapticFeedback(HapticFeedbackType.LongPress)
+        },
+    )
+}
 
 @Composable
 fun MatchList(
@@ -57,7 +79,7 @@ fun MatchCard(
             .fillMaxWidth(1f)
             .padding(top = 8.dp, start = 8.dp, end = 8.dp)
             .clip(shape = MaterialTheme.shapes.large)
-            .combinedClickable (
+            .combinedClickable(
                 onClick = { onClick() },
                 onLongClick = { onHold() },
             ),

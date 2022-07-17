@@ -1,5 +1,6 @@
 package com.dragos.scorerport.dependencyInjection
 
+import android.app.Application
 import com.dragos.scorerport.App
 import com.dragos.scorerport.Database
 import dagger.Module
@@ -11,7 +12,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
     @Provides
     @Singleton
     fun provideDatabase(app: App): Database {
@@ -20,7 +20,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideApp(): App {
-        return App()
+    fun provideApp(application: Application): App {
+        return application as App
     }
 }
