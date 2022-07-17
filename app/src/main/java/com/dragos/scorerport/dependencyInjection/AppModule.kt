@@ -23,5 +23,4 @@ object AppModule {
     fun provideApp(): App {
         return App()
     }
-
 }
