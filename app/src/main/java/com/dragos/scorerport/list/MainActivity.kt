@@ -19,6 +19,7 @@ class MainActivity: ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val viewModel = hiltViewModel<ListViewModel>()
+            viewModel.app.initPreferences(this)
             val haptic = LocalHapticFeedback.current
             ScorerPortTheme(dynamicColor = viewModel.app.dynamicColorEnabled) {
                 // A surface container using the 'background' color from the theme
@@ -30,10 +31,14 @@ class MainActivity: ComponentActivity() {
                         viewModel.database.matchList,
                         onClick = {
                             viewModel.app.dynamicColorEnabled = true
+                            viewModel.app.sharedPreferences.edit()
+                                .putBoolean("dynamicColorEnabled", true).apply()
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         },
                         onHold = {
                             viewModel.app.dynamicColorEnabled = false
+                            viewModel.app.sharedPreferences.edit()
+                                .putBoolean("dynamicColorEnabled", false).apply()
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         },
                     )
