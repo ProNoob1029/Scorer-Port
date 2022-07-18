@@ -30,11 +30,13 @@ fun MainActivityCompose(
             viewModel.app.dynamicColorEnabled = true
             viewModel.app.sharedPreferences.edit().putBoolean("dynamicColorEnabled", true).apply()
             hapticContext.performHapticFeedback(HapticFeedbackType.LongPress)
+            viewModel.database.listenToChildEvent("matchList")
         },
         onHold = {
             viewModel.app.dynamicColorEnabled = false
             viewModel.app.sharedPreferences.edit().putBoolean("dynamicColorEnabled", false).apply()
             hapticContext.performHapticFeedback(HapticFeedbackType.LongPress)
+            viewModel.database.listenToChildEvent("test")
         },
     )
 }

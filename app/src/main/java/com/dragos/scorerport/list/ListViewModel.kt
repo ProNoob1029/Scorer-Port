@@ -10,4 +10,8 @@ import javax.inject.Inject
 class ListViewModel @Inject constructor(
     val database: Database,
     val app: App,
-): ViewModel()
+): ViewModel() {
+    init {
+        database.listenToChildEvent("test")
+    }
+}

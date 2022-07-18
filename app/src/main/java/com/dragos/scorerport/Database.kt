@@ -15,7 +15,9 @@ class Database (
 ) {
     var matchList = mutableStateListOf<MatchDisplay>()
 
-    private var database: DatabaseReference = Firebase.database.reference.child("test")
+    private var database: DatabaseReference = Firebase.database.reference
+
+    private var lastLocation: String = ""
 
     private val childEventListener = object : ChildEventListener {
         override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
@@ -65,7 +67,11 @@ class Database (
         }
     }
 
-    init {
-        database.orderByKey().addChildEventListener(childEventListener)
+    fun listenToChildEvent(location: String) {
+        if (location == lastLocation) return
+        database.child(lastLocation).removeEventListener(childEventListener)
+        matchList.clear()
+        database.child(location).orderByKey().addChildEventListener(childEventListener)
+        lastLocation = location
     }
 }
