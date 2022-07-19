@@ -9,7 +9,7 @@ import androidx.compose.runtime.setValue
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class App: Application(){
+class ScorerApp: Application(){
     lateinit var sharedPreferences: SharedPreferences
 
     var dynamicColorEnabled by mutableStateOf(false)

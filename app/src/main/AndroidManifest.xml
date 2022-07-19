@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:name=".App"
+        android:name=".ScorerApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -16,7 +16,7 @@
         tools:targetApi="31">
         <profileable android:shell="true"/>
         <activity
-            android:name=".list.MainActivity"
+            android:name=".feature_editor.presentation.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.ScorerPort">
             <intent-filter>

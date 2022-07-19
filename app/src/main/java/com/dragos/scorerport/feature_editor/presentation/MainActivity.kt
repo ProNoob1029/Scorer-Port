@@ -1,4 +1,4 @@
-package com.dragos.scorerport.list
+package com.dragos.scorerport.feature_editor.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,26 +9,39 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.dragos.scorerport.ScorerApp
+import com.dragos.scorerport.feature_editor.presentation.match_list.ListViewModel
+import com.dragos.scorerport.feature_editor.presentation.match_list.MainActivityCompose
 import com.dragos.scorerport.ui.theme.ScorerPortTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity: ComponentActivity() {
+
+    @Inject
+    lateinit var scorerApp: ScorerApp
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             val viewModel = hiltViewModel<ListViewModel>()
             val hapticContext = LocalHapticFeedback.current
-            ScorerPortTheme(dynamicColor = viewModel.app.dynamicColorEnabled) {
+            ScorerPortTheme(dynamicColor = viewModel.scorerApp.dynamicColorEnabled) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainActivityCompose(viewModel, hapticContext)
+                    MainActivityCompose(hapticContext = hapticContext)
                 }
             }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        scorerApp.sharedPreferences.edit().putBoolean("dynamicColorEnabled", scorerApp.dynamicColorEnabled).apply()
     }
 
     /*@Preview(showBackground = true, name = "Light Mode")
