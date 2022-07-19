@@ -21,10 +21,10 @@ fun MatchList(
     LazyColumn {
         itemsIndexed(
             items = matchList,
-            key = { _, matchDisplay: MatchDisplay ->
+            key = { _, matchDisplay ->
                 matchDisplay.key
             }
-        ) { index: Int , matchDisplay: MatchDisplay ->
+        ) { index , matchDisplay ->
             MatchCard(
                 match = matchDisplay,
                 index = index,
