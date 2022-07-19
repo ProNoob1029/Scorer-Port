@@ -9,7 +9,7 @@ import com.dragos.scorerport.feature_editor.domain.util.OrderType
 import com.dragos.scorerport.feature_editor.presentation.match_list.components.MatchList
 
 @Composable
-fun MainActivityCompose(
+fun ListScreen(
     viewModel: ListViewModel = hiltViewModel(),
     hapticContext: HapticFeedback,
 ) {

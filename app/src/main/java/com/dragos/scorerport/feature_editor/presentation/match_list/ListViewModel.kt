@@ -26,7 +26,7 @@ class ListViewModel @Inject constructor(
     private var getMatchJob: Job? = null
 
     init {
-        matchListUseCases.changeLocation("test")
+        matchListUseCases.changeLocation("matchList")
         getMatchDisplayList(MatchOrder.Date(OrderType.Descending))
     }
 

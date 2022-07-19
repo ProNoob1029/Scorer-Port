@@ -9,7 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalHapticFeedback
 import com.dragos.scorerport.ScorerApp
-import com.dragos.scorerport.feature_editor.presentation.match_list.MainActivityCompose
+import com.dragos.scorerport.feature_editor.presentation.match_list.ListScreen
 import com.dragos.scorerport.ui.theme.ScorerPortTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -30,7 +30,7 @@ class MainActivity: ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainActivityCompose(hapticContext = hapticContext)
+                    ListScreen(hapticContext = hapticContext)
                 }
             }
         }

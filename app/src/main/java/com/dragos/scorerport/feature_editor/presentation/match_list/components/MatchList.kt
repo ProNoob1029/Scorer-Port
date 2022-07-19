@@ -3,6 +3,7 @@ package com.dragos.scorerport.feature_editor.presentation.match_list.components
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
@@ -17,9 +18,7 @@ fun MatchList(
     onClick: () -> Unit,
     onHold: () -> Unit,
 ) {
-    LazyColumn(
-        //reverseLayout = true,
-    ) {
+    LazyColumn {
         itemsIndexed(
             items = matchList,
             key = { _, matchDisplay: MatchDisplay ->
@@ -31,7 +30,8 @@ fun MatchList(
                 index = index,
                 onClick = { onClick() },
                 onHold = { onHold() },
-                Modifier.animateItemPlacement(),
+                Modifier.animateItemPlacement()
+                    .padding(top = 8.dp, start = 8.dp, end = 8.dp),
             )
         }
         item {

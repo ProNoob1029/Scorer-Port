@@ -29,7 +29,6 @@ fun MatchCard(
     Surface(
         modifier = modifier
             .fillMaxWidth(1f)
-            .padding(top = 8.dp, start = 8.dp, end = 8.dp)
             .clip(shape = MaterialTheme.shapes.large)
             .combinedClickable(
                 onClick = { onClick() },
