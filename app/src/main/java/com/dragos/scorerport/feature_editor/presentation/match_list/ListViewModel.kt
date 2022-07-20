@@ -1,5 +1,6 @@
 package com.dragos.scorerport.feature_editor.presentation.match_list
 
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -36,19 +37,29 @@ class ListViewModel @Inject constructor(
                 if (state.value.matchOrder::class == event.matchOrder::class &&
                     state.value.matchOrder.orderType::class == event.matchOrder.orderType::class
                 ){return}
-                getMatchDisplayList(event.matchOrder)
+                getMatchDisplayList(event.matchOrder, true)
             }
         }
     }
 
-    private fun getMatchDisplayList(matchOrder: MatchOrder) {
+    private fun getMatchDisplayList(matchOrder: MatchOrder, reorder: Boolean = false) {
+        var doReorder = reorder
         getMatchJob?.cancel()
         getMatchJob = matchListUseCases.getMatchList(matchOrder = matchOrder)
             .onEach { newMatchList ->
-                _state.value = state.value.copy(
-                    matchList = newMatchList,
-                    matchOrder = matchOrder
-                )
+                if (doReorder) {
+                    _state.value = state.value.copy(
+                        matchList = newMatchList,
+                        matchOrder = matchOrder,
+                        listState = LazyListState(0, 0)
+                    )
+                    doReorder = false
+                } else {
+                    _state.value = state.value.copy(
+                        matchList = newMatchList,
+                        matchOrder = matchOrder,
+                    )
+                }
             }
             .launchIn(viewModelScope)
     }
