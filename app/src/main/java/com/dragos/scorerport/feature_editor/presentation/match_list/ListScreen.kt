@@ -24,12 +24,28 @@ fun ListScreen(
 ) {
     val state = viewModel.state.value
     val listState = state.listState
+    val matchOrder = state.matchOrder
 
     LazyColumn(state = listState) {
         itemsIndexed(
             items = state.matchList,
             key = { _, matchDisplay ->
-                matchDisplay.key
+                when(matchOrder.orderType) {
+                    is OrderType.Ascending -> {
+                        when(matchOrder) {
+                            is MatchOrder.Name -> matchDisplay.key.plus(1)
+                            is MatchOrder.Date -> matchDisplay.key.plus(2)
+                            is MatchOrder.Points -> matchDisplay.key.plus(3)
+                        }
+                    }
+                    is OrderType.Descending -> {
+                        when(matchOrder) {
+                            is MatchOrder.Name -> matchDisplay.key.plus(4)
+                            is MatchOrder.Date -> matchDisplay.key.plus(5)
+                            is MatchOrder.Points -> matchDisplay.key.plus(6)
+                        }
+                    }
+                }
             },
         ) { index , matchDisplay ->
             MatchCard(
