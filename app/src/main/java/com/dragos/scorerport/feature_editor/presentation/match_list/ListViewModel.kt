@@ -20,8 +20,8 @@ class ListViewModel @Inject constructor(
     val scorerApp: ScorerApp
 ): ViewModel() {
 
-    private val _state = mutableStateOf(MatchListState())
-    val state: State<MatchListState> = _state
+    private val _state = mutableStateOf(ListState())
+    val state: State<ListState> = _state
 
     private var getMatchJob: Job? = null
 

@@ -23,10 +23,9 @@ fun ListScreen(
     hapticContext: HapticFeedback,
 ) {
     val state = viewModel.state.value
-    val listState = state.listState
     val matchOrder = state.matchOrder
 
-    LazyColumn(state = listState) {
+    LazyColumn {
         itemsIndexed(
             items = state.matchList,
             key = { _, matchDisplay ->
