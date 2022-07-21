@@ -3,11 +3,11 @@ package com.dragos.scorerport.di
 import android.app.Application
 import com.dragos.scorerport.ScorerApp
 import com.dragos.scorerport.feature_editor.data.data_source.FirebaseDatabase
-import com.dragos.scorerport.feature_editor.data.repository.MatchListRepositoryImpl
-import com.dragos.scorerport.feature_editor.domain.repository.MatchListRepository
-import com.dragos.scorerport.feature_editor.domain.use_case.ChangeLocation
-import com.dragos.scorerport.feature_editor.domain.use_case.GetMatchList
-import com.dragos.scorerport.feature_editor.domain.use_case.MatchListUseCases
+import com.dragos.scorerport.feature_editor.data.repository.ListRepositoryImpl
+import com.dragos.scorerport.feature_editor.domain.repository.ListRepository
+import com.dragos.scorerport.feature_editor.domain.use_case.ChangeListLocation
+import com.dragos.scorerport.feature_editor.domain.use_case.GetList
+import com.dragos.scorerport.feature_editor.domain.use_case.ListUseCases
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,16 +26,16 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideMatchListRepository(firebaseDatabase: FirebaseDatabase): MatchListRepository {
-        return MatchListRepositoryImpl(firebaseDatabase)
+    fun provideListRepository(firebaseDatabase: FirebaseDatabase): ListRepository {
+        return ListRepositoryImpl(firebaseDatabase)
     }
 
     @Provides
     @Singleton
-    fun provideMatchListUseCases(repository: MatchListRepository): MatchListUseCases {
-        return MatchListUseCases(
-            getMatchList = GetMatchList(repository),
-            changeLocation = ChangeLocation(repository),
+    fun provideListUseCases(listRepository: ListRepository): ListUseCases {
+        return ListUseCases(
+            getList = GetList(listRepository),
+            changeListLocation = ChangeListLocation(listRepository),
         )
     }
 

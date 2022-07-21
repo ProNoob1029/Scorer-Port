@@ -3,13 +3,9 @@ package com.dragos.scorerport.feature_editor.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalHapticFeedback
 import com.dragos.scorerport.ScorerApp
-import com.dragos.scorerport.feature_editor.presentation.match_list.ListScreen
+import com.dragos.scorerport.feature_editor.presentation.list.ListScreen
 import com.dragos.scorerport.ui.theme.ScorerPortTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -26,12 +22,7 @@ class MainActivity: ComponentActivity() {
             val hapticContext = LocalHapticFeedback.current
             ScorerPortTheme(dynamicColor = scorerApp.dynamicColorEnabled) {
                 // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    ListScreen(hapticContext = hapticContext)
-                }
+                ListScreen(hapticContext = hapticContext)
             }
         }
     }

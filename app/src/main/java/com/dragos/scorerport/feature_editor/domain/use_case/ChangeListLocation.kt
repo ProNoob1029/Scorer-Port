@@ -1,9 +1,9 @@
 package com.dragos.scorerport.feature_editor.domain.use_case
 
-import com.dragos.scorerport.feature_editor.domain.repository.MatchListRepository
+import com.dragos.scorerport.feature_editor.domain.repository.ListRepository
 
-class ChangeLocation(
-    private val repository: MatchListRepository
+class ChangeListLocation(
+    private val repository: ListRepository
 ) {
     operator fun invoke(
         location: String

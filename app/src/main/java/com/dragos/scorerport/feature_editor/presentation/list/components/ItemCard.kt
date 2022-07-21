@@ -1,4 +1,4 @@
-package com.dragos.scorerport.feature_editor.presentation.match_list.components
+package com.dragos.scorerport.feature_editor.presentation.list.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -13,18 +13,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.dragos.scorerport.feature_editor.domain.model.MatchDisplay
+import com.dragos.scorerport.feature_editor.domain.model.ListItemModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MatchCard(
-    match: MatchDisplay,
+fun ItemCard(
+    item: ListItemModel,
     index: Int,
     onClick: () -> Unit,
     onHold: () -> Unit,
     modifier: Modifier,
+    containerColor: Color = MaterialTheme.colorScheme.secondaryContainer,
 ){
     Surface(
         modifier = modifier
@@ -34,7 +36,7 @@ fun MatchCard(
                 onClick = { onClick() },
                 onLongClick = { onHold() },
             ),
-        color = MaterialTheme.colorScheme.secondaryContainer,
+        color = containerColor,
         shape = MaterialTheme.shapes.large,
     ) {
         Row(
@@ -46,23 +48,23 @@ fun MatchCard(
                 style = MaterialTheme.typography.titleLarge,
             )
             Text(
-                text = match.name,
+                text = item.title,
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier
                     .weight(2f),
                 maxLines = 3,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
             )
 
             Column(
                 horizontalAlignment = Alignment.End
             ){
                 Text(
-                    text = match.timeStamp.toString(),
+                    text = item.timeStamp.toString(),
                     style = MaterialTheme.typography.bodyLarge,
                 )
                 Text(
-                    text = match.points.toString().plus(" points"),
+                    text = item.points.toString().plus(" points"),
                     style = MaterialTheme.typography.bodyLarge,
                 )
             }

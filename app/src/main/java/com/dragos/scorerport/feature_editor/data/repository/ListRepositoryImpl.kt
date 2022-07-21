@@ -1,15 +1,15 @@
 package com.dragos.scorerport.feature_editor.data.repository
 
 import com.dragos.scorerport.feature_editor.data.data_source.FirebaseDatabase
-import com.dragos.scorerport.feature_editor.domain.model.MatchDisplay
-import com.dragos.scorerport.feature_editor.domain.repository.MatchListRepository
+import com.dragos.scorerport.feature_editor.domain.model.ListItemModel
+import com.dragos.scorerport.feature_editor.domain.repository.ListRepository
 import kotlinx.coroutines.flow.StateFlow
 
-class MatchListRepositoryImpl(
+class ListRepositoryImpl(
     private val database: FirebaseDatabase
-): MatchListRepository {
-    override fun getMatchList(): StateFlow<List<MatchDisplay>> {
-        return database.getMatchList()
+): ListRepository {
+    override fun getList(): StateFlow<List<ListItemModel>> {
+        return database.getList()
     }
 
     override fun changeLocation(location: String) {
