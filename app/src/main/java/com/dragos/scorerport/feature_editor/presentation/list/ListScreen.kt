@@ -11,8 +11,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.hapticfeedback.HapticFeedback
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dragos.scorerport.feature_editor.domain.util.Order
@@ -23,7 +21,6 @@ import com.dragos.scorerport.feature_editor.presentation.list.components.ItemCar
 @Composable
 fun ListScreen(
     viewModel: ListViewModel = hiltViewModel(),
-    hapticContext: HapticFeedback,
 ) {
     val state = viewModel.state.value
 
@@ -70,13 +67,11 @@ fun ListScreen(
                     index = index,
                     onClick = {
                         //viewModel.scorerApp.dynamicColorEnabled = true
-                        hapticContext.performHapticFeedback(HapticFeedbackType.LongPress)
                         //viewModel.onEvent(ListEvent.Order(Order.Date(OrderType.Descending)))
                         viewModel.onEvent(ListEvent.SwapLocation)
                     },
                     onHold = {
                         //viewModel.scorerApp.dynamicColorEnabled = false
-                        hapticContext.performHapticFeedback(HapticFeedbackType.LongPress)
                         //viewModel.onEvent(ListEvent.Order(Order.Date(OrderType.Ascending)))
                         viewModel.onEvent(ListEvent.SwapLocation)
                     },

@@ -3,7 +3,6 @@ package com.dragos.scorerport.feature_editor.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.ui.platform.LocalHapticFeedback
 import com.dragos.scorerport.ScorerApp
 import com.dragos.scorerport.feature_editor.presentation.list.ListScreen
 import com.dragos.scorerport.ui.theme.ScorerPortTheme
@@ -19,10 +18,9 @@ class MainActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val hapticContext = LocalHapticFeedback.current
             ScorerPortTheme(dynamicColor = scorerApp.dynamicColorEnabled) {
                 // A surface container using the 'background' color from the theme
-                ListScreen(hapticContext = hapticContext)
+                ListScreen()
             }
         }
     }

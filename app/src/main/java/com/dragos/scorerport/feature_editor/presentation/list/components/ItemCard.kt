@@ -14,6 +14,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.dragos.scorerport.feature_editor.domain.model.ListItemModel
@@ -28,13 +30,20 @@ fun ItemCard(
     modifier: Modifier,
     containerColor: Color = MaterialTheme.colorScheme.secondaryContainer,
 ){
+    val hapticContext = LocalHapticFeedback.current
     Surface(
         modifier = modifier
             .fillMaxWidth(1f)
             .clip(shape = MaterialTheme.shapes.large)
             .combinedClickable(
-                onClick = { onClick() },
-                onLongClick = { onHold() },
+                onClick = {
+                    hapticContext.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onClick()
+                          },
+                onLongClick = {
+                    hapticContext.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onHold()
+                              },
             ),
         color = containerColor,
         shape = MaterialTheme.shapes.large,
