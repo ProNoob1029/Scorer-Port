@@ -30,17 +30,19 @@ fun ListScreen(
                 onClick = {
                 /*TODO*/
                 },
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                containerColor = MaterialTheme.colorScheme.primary,
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add match")
             }
         },
-        containerColor = MaterialTheme.colorScheme.background,
-        contentColor = MaterialTheme.colorScheme.primary,
     ) {
         LazyColumn(
             modifier = Modifier.padding(it),
         ) {
+            item {
+                Spacer(modifier = Modifier.height(4.dp))
+            }
+
             itemsIndexed(
                 items = state.list,
                 key = { _, item ->
@@ -68,21 +70,20 @@ fun ListScreen(
                     onClick = {
                         //viewModel.scorerApp.dynamicColorEnabled = true
                         //viewModel.onEvent(ListEvent.Order(Order.Date(OrderType.Descending)))
-                        viewModel.onEvent(ListEvent.SwapLocation)
+                        //viewModel.onEvent(ListEvent.SwapLocation)
                     },
                     onHold = {
                         //viewModel.scorerApp.dynamicColorEnabled = false
                         //viewModel.onEvent(ListEvent.Order(Order.Date(OrderType.Ascending)))
-                        viewModel.onEvent(ListEvent.SwapLocation)
+                        //viewModel.onEvent(ListEvent.SwapLocation)
                     },
                     modifier = Modifier
                         .animateItemPlacement()
-                        .padding(top = 8.dp, start = 8.dp, end = 8.dp),
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        .padding(vertical = 4.dp, horizontal = 8.dp),
                 )
             }
             item {
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(4.dp))
             }
         }
     }

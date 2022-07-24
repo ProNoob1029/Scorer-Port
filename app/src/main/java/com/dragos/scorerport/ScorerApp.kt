@@ -12,11 +12,11 @@ import dagger.hilt.android.HiltAndroidApp
 class ScorerApp: Application(){
     lateinit var sharedPreferences: SharedPreferences
 
-    var dynamicColorEnabled by mutableStateOf(false)
+    var dynamicColorEnabled by mutableStateOf(true)
 
     override fun onCreate() {
         super.onCreate()
         sharedPreferences = getSharedPreferences("defaultPref", Context.MODE_PRIVATE)
-        dynamicColorEnabled = sharedPreferences.getBoolean("dynamicColorEnabled", false)
+        //dynamicColorEnabled = sharedPreferences.getBoolean("dynamicColorEnabled", false)
     }
 }
