@@ -9,16 +9,33 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AllianceButtons() {
+    BoxWithConstraints {
+        if(maxWidth > 290.dp) {
+            Row(modifier = Modifier.height(IntrinsicSize.Max)) {
+                AllianceButtonsInternal(modifier = Modifier.weight(1f))
+            }
+        } else {
+            Column {
+                AllianceButtonsInternal(compact = true)
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+internal fun AllianceButtonsInternal(
+    modifier: Modifier = Modifier,
+    compact: Boolean = false
+) {
     val view = LocalView.current
 
     var redActive by rememberSaveable { mutableStateOf(false) }
@@ -36,139 +53,66 @@ fun AllianceButtons() {
         targetValue = if (blueActive) Color.White else LocalContentColor.current
     )
 
-    BoxWithConstraints {
-        if(maxWidth > 290.dp) {
-            Row(modifier = Modifier.height(IntrinsicSize.Max)) {
-                Surface(
-                    modifier = Modifier
-                        .weight(1f),
-                    color = redColor,
-                    checked = redActive,
-                    onCheckedChange = { isChecked ->
-                        println("RED CHANGE")
-                        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                        if(isChecked){
-                            redActive = true
-                            blueActive = false
-                        } else {
-                            redActive = false
-                        }
-                    },
-                    shape = MaterialTheme.shapes.large,
-                    contentColor = redTextColor,
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(vertical = 8.dp, horizontal = 8.dp),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(
-                            text = "Red Alliance",
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.headlineSmall,
-                        )
-                    }
-                }
 
-                Spacer(modifier = Modifier.width(16.dp))
 
-                Surface(
-                    modifier = Modifier
-                        .weight(1f),
-                    color = blueColor,
-                    checked = blueActive,
-                    onCheckedChange = { isChecked ->
-                        println("BLUE CHANGE")
-                        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                        if(isChecked){
-                            blueActive = true
-                            redActive = false
-                        } else {
-                            blueActive = false
-                        }
-                    },
-                    shape = MaterialTheme.shapes.large,
-                    contentColor = blueTextColor,
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(vertical = 8.dp, horizontal = 8.dp),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(
-                            text = "Blue Alliance",
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.headlineSmall,
-                        )
-                    }
-                }
+    Surface(
+        modifier = modifier,
+        color = redColor,
+        checked = redActive,
+        onCheckedChange = { isChecked ->
+            view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+            if(isChecked){
+                redActive = true
+                blueActive = false
+            } else {
+                redActive = false
             }
-        } else {
-            Column {
-                Surface(
-                    color = redColor,
-                    checked = redActive,
-                    onCheckedChange = { isChecked ->
-                        println("RED CHANGE")
-                        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                        if(isChecked){
-                            redActive = true
-                            blueActive = false
-                        } else {
-                            redActive = false
-                        }
-                    },
-                    shape = MaterialTheme.shapes.large,
-                    contentColor = redTextColor,
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(vertical = 8.dp, horizontal = 8.dp),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(
-                            text = "Red Alliance",
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.headlineSmall,
-                        )
-                    }
-                }
+        },
+        shape = MaterialTheme.shapes.large,
+        contentColor = redTextColor,
+    ) {
+        Text(
+            text = "Red Alliance",
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.headlineSmall,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(all = 8.dp)
+                .heightIn(min = 50.dp)
+                .wrapContentHeight(),
+        )
+    }
 
-                Spacer(modifier = Modifier.height(8.dp))
+    if(compact)
+        Spacer(modifier = Modifier.height(8.dp))
+    else
+        Spacer(modifier = Modifier.width(16.dp))
 
-                Surface(
-                    color = blueColor,
-                    checked = blueActive,
-                    onCheckedChange = { isChecked ->
-                        println("BLUE CHANGE")
-                        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                        if(isChecked){
-                            blueActive = true
-                            redActive = false
-                        } else {
-                            blueActive = false
-                        }
-                    },
-                    shape = MaterialTheme.shapes.large,
-                    contentColor = blueTextColor,
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(vertical = 8.dp, horizontal = 8.dp),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(
-                            text = "Blue Alliance",
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.headlineSmall,
-                        )
-                    }
-                }
+    Surface(
+        modifier = modifier,
+        color = blueColor,
+        checked = blueActive,
+        onCheckedChange = { isChecked ->
+            view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+            if(isChecked){
+                blueActive = true
+                redActive = false
+            } else {
+                blueActive = false
             }
-        }
+        },
+        shape = MaterialTheme.shapes.large,
+        contentColor = blueTextColor,
+    ) {
+        Text(
+            text = "Blue Alliance",
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.headlineSmall,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(all = 8.dp)
+                .heightIn(min = 50.dp)
+                .wrapContentHeight(),
+        )
     }
 }
