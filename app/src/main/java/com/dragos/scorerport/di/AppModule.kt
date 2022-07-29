@@ -4,6 +4,7 @@ import android.app.Application
 import com.dragos.scorerport.ScorerApp
 import com.dragos.scorerport.feature_editor.data.data_source.FirebaseDatabase
 import com.dragos.scorerport.feature_editor.data.repository.ListRepositoryImpl
+import com.dragos.scorerport.feature_editor.data.repository.TestRepositoryImpl
 import com.dragos.scorerport.feature_editor.domain.repository.ListRepository
 import com.dragos.scorerport.feature_editor.domain.use_case.ChangeListLocation
 import com.dragos.scorerport.feature_editor.domain.use_case.GetList
@@ -27,7 +28,8 @@ object AppModule {
     @Provides
     @Singleton
     fun provideListRepository(firebaseDatabase: FirebaseDatabase): ListRepository {
-        return ListRepositoryImpl(firebaseDatabase)
+        //return ListRepositoryImpl(firebaseDatabase)
+        return TestRepositoryImpl()
     }
 
     @Provides

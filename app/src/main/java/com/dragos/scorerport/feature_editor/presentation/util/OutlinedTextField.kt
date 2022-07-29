@@ -29,6 +29,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.lerp
 import androidx.compose.ui.unit.dp
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OutlinedTextField(
     value: String,
@@ -119,6 +120,7 @@ fun OutlinedTextField(
     ))
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun MyLabel (
     colors: TextFieldColors = TextFieldDefaults.outlinedTextFieldColors(),
@@ -142,6 +144,10 @@ internal fun MyLabel (
         else -> InputPhase.UnfocusedNotEmpty
     }
 
+    val labelColor: @Composable (InputPhase) -> Color = {
+        colors.labelColor(enabled, isError, interactionSource).value
+    }
+
     val transition = updateTransition(inputState, label = "TextFieldInputState")
 
     val labelProgress by transition.animateFloat(
@@ -155,10 +161,6 @@ internal fun MyLabel (
         }
     }
 
-    val labelColor: @Composable (InputPhase) -> Color = {
-        colors.labelColor(enabled, isError, interactionSource).value
-    }
-
     val labelContentColor by transition.animateColor(
         transitionSpec = { tween(durationMillis = AnimationDuration) },
         label = "LabelContentColor",
@@ -167,11 +169,13 @@ internal fun MyLabel (
 
     val decoratedLabel: @Composable (() -> Unit) = label.let {
         @Composable {
+
             val labelTextStyle = lerp(
-            bodyLarge,
-            bodySmall,
-            labelProgress
-        )
+                bodyLarge,
+                bodySmall,
+                labelProgress
+            )
+
             Decoration(labelContentColor, labelTextStyle, it)
         }
     }
@@ -207,4 +211,4 @@ private enum class InputPhase {
     UnfocusedNotEmpty
 }
 
-internal const val AnimationDuration = 150
+internal const val AnimationDuration = 150 //150

@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.dragos.scorerport.feature_editor.domain.model.ListItemModel
@@ -29,8 +30,15 @@ fun ItemCard(
     onHold: () -> Unit,
     modifier: Modifier,
     containerColor: Color = MaterialTheme.colorScheme.secondaryContainer,
+    titleStyle: TextStyle = MaterialTheme.typography.titleLarge,
+    infoStyle: TextStyle = MaterialTheme.typography.titleSmall
 ){
     val view = LocalView.current
+
+    val newIndex = index + 1
+    val points = item.points
+    val timeStamp = item.timeStamp
+
     Surface(
         modifier = modifier
             .fillMaxWidth(1f)
@@ -53,28 +61,28 @@ fun ItemCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = (index + 1).toString().plus(". "),
-                style = MaterialTheme.typography.titleLarge,
+                text = "$newIndex. ",
+                style = titleStyle
             )
             Text(
                 text = item.title,
-                style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier
                     .weight(2f),
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
+                style = titleStyle
             )
 
             Column(
                 horizontalAlignment = Alignment.End
             ){
                 Text(
-                    text = item.timeStamp.toString(),
-                    style = MaterialTheme.typography.bodyLarge,
+                    text = "$timeStamp",
+                    style = infoStyle
                 )
                 Text(
-                    text = item.points.toString().plus(" points"),
-                    style = MaterialTheme.typography.bodyLarge,
+                    text = "$points points",
+                    style = infoStyle
                 )
             }
         }

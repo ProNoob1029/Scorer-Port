@@ -12,6 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
@@ -34,7 +35,8 @@ fun AllianceButtons() {
 @Composable
 internal fun AllianceButtonsInternal(
     modifier: Modifier = Modifier,
-    compact: Boolean = false
+    compact: Boolean = false,
+    fontStyle: TextStyle = MaterialTheme.typography.headlineSmall
 ) {
     val view = LocalView.current
 
@@ -52,8 +54,6 @@ internal fun AllianceButtonsInternal(
     val blueTextColor by animateColorAsState(
         targetValue = if (blueActive) Color.White else LocalContentColor.current
     )
-
-
 
     Surface(
         modifier = modifier,
@@ -74,7 +74,7 @@ internal fun AllianceButtonsInternal(
         Text(
             text = "Red Alliance",
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.headlineSmall,
+            style = fontStyle,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(all = 8.dp)
@@ -107,7 +107,7 @@ internal fun AllianceButtonsInternal(
         Text(
             text = "Blue Alliance",
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.headlineSmall,
+            style = fontStyle,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(all = 8.dp)

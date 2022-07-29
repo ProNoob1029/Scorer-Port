@@ -10,8 +10,8 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class FirebaseDatabase (
@@ -95,7 +95,7 @@ class FirebaseDatabase (
         lastLocation = location
     }
 
-    fun getList() : StateFlow<List<ListItemModel>> {
+    fun getList() : Flow<List<ListItemModel>> {
         return listState
     }
 }
