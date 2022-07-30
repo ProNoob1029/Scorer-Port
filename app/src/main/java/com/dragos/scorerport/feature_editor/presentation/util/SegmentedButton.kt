@@ -1,25 +1,19 @@
 package com.dragos.scorerport.feature_editor.presentation.util
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 
 /**
  * items : list of items to be render
@@ -30,74 +24,48 @@ import androidx.compose.ui.zIndex
  * color : Set color to control (Optional)
  * onItemSelection : Get selected item index
  */
+@ExperimentalMaterial3Api
 @Composable
 fun SegmentedButton(
     items: List<String>,
-    defaultSelectedItemIndex: Int = 0,
-    useFixedWidth: Boolean = false,
-    itemWidth: Dp = 120.dp,
-    cornerRadius : Int = 10,
-    color : Color = MaterialTheme.colorScheme.primary,
-    onItemSelection: (selectedItemIndex: Int) -> Unit
+    selectedIndex: Int?,
+    onItemClick: (index: Int) -> Unit,
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.primary,
+    enabled: Boolean = true,
 ) {
-    val selectedIndex = remember { mutableStateOf(defaultSelectedItemIndex) }
 
     Row(
-        modifier = Modifier
+        modifier = modifier
+            .height(IntrinsicSize.Max)
+            .width(IntrinsicSize.Max)
     ) {
         items.forEachIndexed { index, item ->
+            val selected = selectedIndex == index
+            val surfaceColor by animateColorAsState(
+                if (selected) color else Color.Transparent,
+            )
+            val contentColor by animateColorAsState(
+                if (selected) contentColorFor(backgroundColor = color) else MaterialTheme.colorScheme.onSurface,
+            )
+            LocalDensity.current
             OutlinedButton(
-                modifier = when (index) {
-                    0 -> {
-                        if (useFixedWidth) {
-                            Modifier
-                                .width(itemWidth)
-                                .offset(0.dp, 0.dp)
-                                .zIndex(if (selectedIndex.value == index) 1f else 0f)
-                        } else {
-                            Modifier
-                                .wrapContentSize()
-                                .offset(0.dp, 0.dp)
-                                .zIndex(if (selectedIndex.value == index) 1f else 0f)
-                        }
-                    } else -> {
-                        if (useFixedWidth)
-                            Modifier
-                                .width(itemWidth)
-                                .offset((-1 * index).dp, 0.dp)
-                                .zIndex(if (selectedIndex.value == index) 1f else 0f)
-                        else Modifier
-                            .wrapContentSize()
-                            .offset((-1 * index).dp, 0.dp)
-                            .zIndex(if (selectedIndex.value == index) 1f else 0f)
-                    }
-                },
-                onClick = {
-                    selectedIndex.value = index
-                    onItemSelection(selectedIndex.value)
-                },
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight(),
                 shape = when (index) {
-                    /**
-                     * left outer button
-                     */
                     0 -> RoundedCornerShape(
-                        topStartPercent = cornerRadius,
+                        topStartPercent = 50,
                         topEndPercent = 0,
-                        bottomStartPercent = cornerRadius,
+                        bottomStartPercent = 50,
                         bottomEndPercent = 0
                     )
-                    /**
-                     * right outer button
-                     */
                     items.size - 1 -> RoundedCornerShape(
                         topStartPercent = 0,
-                        topEndPercent = cornerRadius,
+                        topEndPercent = 50,
                         bottomStartPercent = 0,
-                        bottomEndPercent = cornerRadius
+                        bottomEndPercent = 50
                     )
-                    /**
-                     * middle button
-                     */
                     else -> RoundedCornerShape(
                         topStartPercent = 0,
                         topEndPercent = 0,
@@ -106,34 +74,30 @@ fun SegmentedButton(
                     )
                 },
                 border = BorderStroke(
-                    1.dp, if (selectedIndex.value == index) {
-                        color
-                    } else {
-                        color
-                    }
+                    1.dp,
+                    MaterialTheme.colorScheme.outline
                 ),
-                colors = if (selectedIndex.value == index) {
-                    /**
-                     * selected colors
-                     */
-                    ButtonDefaults.outlinedButtonColors(
-                        containerColor = color
-                    )
-                } else {
-                    /**
-                     * not selected colors
-                     */
-                    ButtonDefaults.outlinedButtonColors(containerColor = Color.Transparent)
-                },
+                colors = ButtonDefaults.outlinedButtonColors(
+                    containerColor = surfaceColor,
+                    contentColor = contentColor
+                ),
+                onClick = {onItemClick(index)},
+                contentPadding = PaddingValues(
+                    horizontal = 8.dp
+                ),
+                enabled = enabled,
             ) {
+                if(selected)
+                    Icon(
+                        imageVector = Icons.Rounded.Check,
+                        contentDescription = "checkIcon",
+                    )
+                
                 Text(
                     text = item,
-                    fontWeight = FontWeight.Normal,
-                    color = if (selectedIndex.value == index) {
-                        Color.White
-                    } else {
-                        color
-                    },
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .wrapContentHeight()
                 )
             }
         }

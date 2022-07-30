@@ -42,8 +42,10 @@ fun Title(
             )
         }
 
+        Spacer(modifier = Modifier.height(8.dp))
+        
         Column(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            modifier = Modifier.padding(horizontal = 16.dp)
         ) {
             var title by rememberSaveable { mutableStateOf("") }
 
