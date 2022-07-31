@@ -4,8 +4,6 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -16,25 +14,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 /**
- * items : list of items to be render
- * defaultSelectedItemIndex : to highlight item by default (Optional)
- * useFixedWidth : set true if you want to set fix width to item (Optional)
- * itemWidth : Provide item width if useFixedWidth is set to true (Optional)
- * cornerRadius : To make control as rounded (Optional)
- * color : Set color to control (Optional)
- * onItemSelection : Get selected item index
+ * @param items List of items to be rendered
+ * @param selectedIndex The index of selected item, this is null for no item selected
+ * @param onItemClick Called when an item is clicked, with that items index as the parameter
+ * @param color Background color of the selected item
+ * @param enabled Enabled state of this button
  */
 @ExperimentalMaterial3Api
 @Composable
 fun SegmentedButton(
+    modifier: Modifier = Modifier,
     items: List<String>,
     selectedIndex: Int?,
     onItemClick: (index: Int) -> Unit,
-    modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.primary,
     enabled: Boolean = true,
 ) {
-
     Row(
         modifier = modifier
             .height(IntrinsicSize.Max)
@@ -83,15 +78,10 @@ fun SegmentedButton(
                 ),
                 onClick = {onItemClick(index)},
                 contentPadding = PaddingValues(
-                    horizontal = 8.dp
+                    horizontal = 4.dp
                 ),
                 enabled = enabled,
             ) {
-                if(selected)
-                    Icon(
-                        imageVector = Icons.Rounded.Check,
-                        contentDescription = "checkIcon",
-                    )
                 
                 Text(
                     text = item,

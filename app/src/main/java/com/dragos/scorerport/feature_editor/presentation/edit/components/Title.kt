@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -13,9 +12,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.dragos.scorerport.feature_editor.presentation.util.OutlinedTextField
 
@@ -23,24 +19,14 @@ import com.dragos.scorerport.feature_editor.presentation.util.OutlinedTextField
 @Composable
 fun Title(
     modifier: Modifier = Modifier,
-    surfaceColor: Color = MaterialTheme.colorScheme.primaryContainer,
-    titleStyle: TextStyle = MaterialTheme.typography.headlineLarge
 ) {
 
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Surface(
-            color = surfaceColor,
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Text(
-                text = "New Match",
-                textAlign = TextAlign.Center,
-                style = titleStyle,
-            )
-        }
+
+        TitleCard(title = "New Matchhh", modifier = Modifier.padding(horizontal = 16.dp))
 
         Spacer(modifier = Modifier.height(8.dp))
         

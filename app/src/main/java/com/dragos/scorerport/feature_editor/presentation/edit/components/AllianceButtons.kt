@@ -15,10 +15,11 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.dragos.scorerport.feature_editor.presentation.util.MeasureViewWidth
 
 @Composable
 fun AllianceButtons() {
-    BoxWithConstraints {
+    /*BoxWithConstraints {
         if(maxWidth > 290.dp) {
             Row(modifier = Modifier.height(IntrinsicSize.Max)) {
                 AllianceButtonsInternal(modifier = Modifier.weight(1f))
@@ -27,6 +28,53 @@ fun AllianceButtons() {
             Column {
                 AllianceButtonsInternal(compact = true)
             }
+        }
+    }*/
+
+    HorizontalAllianceButtons()
+}
+
+@Composable
+internal fun HorizontalAllianceButtons(
+    fontStyle: TextStyle = MaterialTheme.typography.headlineSmall
+) {
+    Row(
+        modifier = Modifier.width(IntrinsicSize.Min)
+    ) {
+        Surface(
+            shape = MaterialTheme.shapes.large,
+            color = Color.Blue,
+        ) {
+            Text(
+                text = "Red Alliance",
+                textAlign = TextAlign.Center,
+                style = fontStyle,
+                maxLines = 2,
+                modifier = Modifier
+                    .padding(all = 8.dp)
+                    .heightIn(min = 50.dp)
+                    .requiredWidthIn()
+                    .weight(1f)
+                    .wrapContentHeight(),
+            )
+        }
+        Spacer(modifier = Modifier.width(16.dp))
+        Surface(
+            shape = MaterialTheme.shapes.large,
+            contentColor = Color.White,
+        ) {
+            Text(
+                text = "Blue Alliance",
+                textAlign = TextAlign.Center,
+                style = fontStyle,
+                maxLines = 2,
+                modifier = Modifier
+                    .padding(all = 8.dp)
+                    .heightIn(min = 50.dp)
+                    .weight(1f)
+
+                    .wrapContentHeight(),
+            )
         }
     }
 }
