@@ -1,6 +1,8 @@
 package com.dragos.scorerport.feature_editor.presentation.edit.components
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -23,35 +25,32 @@ fun TitleCard (
 
     Surface(color = surfaceColor) {
         if(hasPoints) {
-            BoxWithConstraints(
-                modifier = modifier
-            ) {
-                MeasureViewWidth(
-                    viewToMeasure = {
-                        Text(text = "$title$points points", style = titleStyle)
-                    }
-                ) { measuredWidth ->
-                    if(measuredWidth > maxWidth) {
+            MeasureViewWidth(
+                modifier = modifier,
+                viewToMeasure = {
+                    Text(text = "$title$points points", style = titleStyle)
+                }
+            ) { compact ->
+                if(compact) {
+                    Text(
+                        text = "$title$points points",
+                        modifier = Modifier.fillMaxWidth(),
+                        style = titleStyle,
+                        textAlign = TextAlign.Center
+                    )
+                } else {
+                    Row(modifier = Modifier.fillMaxWidth()) {
                         Text(
-                            text = "$title$points points",
-                            modifier = Modifier.fillMaxWidth(),
+                            text = title,
+                            textAlign = TextAlign.Start,
                             style = titleStyle,
-                            textAlign = TextAlign.Center
+                            modifier = Modifier.weight(1f),
                         )
-                    } else {
-                        Row(modifier = Modifier.fillMaxWidth()) {
-                            Text(
-                                text = title,
-                                textAlign = TextAlign.Start,
-                                style = titleStyle,
-                                modifier = Modifier.weight(1f),
-                            )
-                            Text(
-                                text = "$points points",
-                                textAlign = TextAlign.End,
-                                style = titleStyle,
-                            )
-                        }
+                        Text(
+                            text = "$points points",
+                            textAlign = TextAlign.End,
+                            style = titleStyle,
+                        )
                     }
                 }
             }

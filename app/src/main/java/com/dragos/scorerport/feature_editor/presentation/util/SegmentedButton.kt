@@ -20,9 +20,127 @@ import androidx.compose.ui.unit.dp
  * @param color Background color of the selected item
  * @param enabled Enabled state of this button
  */
-@ExperimentalMaterial3Api
 @Composable
 fun SegmentedButton(
+    modifier: Modifier = Modifier,
+    items: List<String>,
+    selectedIndex: Int?,
+    onItemClick: (index: Int) -> Unit,
+    color: Color = MaterialTheme.colorScheme.primary,
+    enabled: Boolean = true,
+    compact: Boolean = false
+) {
+    /*MeasureViewWidth(
+        modifier = modifier,
+        viewToMeasure = {
+            HorizontalSegmentedButton(
+                items = items,
+                selectedIndex = selectedIndex,
+                onItemClick = onItemClick,
+                color = color,
+                enabled = enabled
+            )
+        }
+    ) { compact ->
+
+    }*/
+
+    if (!compact) {
+        HorizontalSegmentedButton(
+            modifier = modifier,
+            items = items,
+            selectedIndex = selectedIndex,
+            onItemClick = onItemClick,
+            color = color,
+            enabled = enabled
+        )
+    } else {
+        VerticalSegmentedButton(
+            modifier = modifier,
+            items = items,
+            selectedIndex = selectedIndex,
+            onItemClick = onItemClick,
+            color = color,
+            enabled = enabled
+        )
+    }
+}
+
+@Composable
+internal fun VerticalSegmentedButton (
+    modifier: Modifier = Modifier,
+    items: List<String>,
+    selectedIndex: Int?,
+    onItemClick: (index: Int) -> Unit,
+    color: Color = MaterialTheme.colorScheme.primary,
+    enabled: Boolean = true,
+) {
+    Column(
+        modifier = modifier
+            .height(IntrinsicSize.Max)
+            .width(IntrinsicSize.Max)
+    ) {
+        items.forEachIndexed { index, item ->
+            val selected = selectedIndex == index
+            val surfaceColor by animateColorAsState(
+                if (selected) color else Color.Transparent,
+            )
+            val contentColor by animateColorAsState(
+                if (selected) contentColorFor(backgroundColor = color) else MaterialTheme.colorScheme.onSurface,
+            )
+            LocalDensity.current
+            OutlinedButton(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                shape = when (index) {
+                    0 -> RoundedCornerShape(
+                        topStartPercent = 50,
+                        topEndPercent = 50,
+                        bottomStartPercent = 0,
+                        bottomEndPercent = 0
+                    )
+                    items.size - 1 -> RoundedCornerShape(
+                        topStartPercent = 0,
+                        topEndPercent = 0,
+                        bottomStartPercent = 50,
+                        bottomEndPercent = 50
+                    )
+                    else -> RoundedCornerShape(
+                        topStartPercent = 0,
+                        topEndPercent = 0,
+                        bottomStartPercent = 0,
+                        bottomEndPercent = 0
+                    )
+                },
+                border = BorderStroke(
+                    1.dp,
+                    MaterialTheme.colorScheme.outline
+                ),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    containerColor = surfaceColor,
+                    contentColor = contentColor
+                ),
+                onClick = {onItemClick(index)},
+                contentPadding = PaddingValues(
+                    horizontal = 4.dp
+                ),
+                enabled = enabled,
+            ) {
+
+                Text(
+                    text = item,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .width(IntrinsicSize.Min)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+internal fun HorizontalSegmentedButton (
     modifier: Modifier = Modifier,
     items: List<String>,
     selectedIndex: Int?,
@@ -82,7 +200,7 @@ fun SegmentedButton(
                 ),
                 enabled = enabled,
             ) {
-                
+
                 Text(
                     text = item,
                     textAlign = TextAlign.Center,

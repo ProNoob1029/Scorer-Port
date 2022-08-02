@@ -1,78 +1,111 @@
 package com.dragos.scorerport.feature_editor.presentation.edit.components
 
-import android.view.HapticFeedbackConstants
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.dragos.scorerport.feature_editor.presentation.util.MeasureViewWidth
 
 @Composable
-fun AllianceButtons() {
-    /*BoxWithConstraints {
-        if(maxWidth > 290.dp) {
-            Row(modifier = Modifier.height(IntrinsicSize.Max)) {
-                AllianceButtonsInternal(modifier = Modifier.weight(1f))
+fun AllianceButtons(
+    modifier: Modifier = Modifier,
+    fontStyle: TextStyle = MaterialTheme.typography.headlineSmall,
+    redText: String = "Red Alliance",
+    blueText: String = "Blue Alliance",
+    activeIndex: Int?,
+    onItemClick: (index: Int) -> Unit,
+) {
+
+    MeasureViewWidth(
+        modifier = modifier,
+        viewToMeasure = {
+            MeasureHorizontalAllianceButtons(
+                fontStyle = fontStyle,
+                redText = redText,
+                blueText = blueText
+            )
+    }) { compact ->
+
+        if (compact) {
+            Column {
+                AllianceButtonsInternal(
+                    modifier = Modifier.fillMaxWidth(),
+                    vertical = true,
+                    redText = redText,
+                    blueText = blueText,
+                    fontStyle = fontStyle,
+                    onClick = onItemClick,
+                    activeIndex = activeIndex
+                )
             }
         } else {
-            Column {
-                AllianceButtonsInternal(compact = true)
+            Row(modifier = Modifier.height(IntrinsicSize.Max)) {
+                AllianceButtonsInternal(
+                    modifier = Modifier.weight(1f),
+                    redText = redText,
+                    blueText = blueText,
+                    fontStyle = fontStyle,
+                    onClick = onItemClick,
+                    activeIndex = activeIndex
+                )
             }
         }
-    }*/
+    }
 
-    HorizontalAllianceButtons()
+
+
+
 }
 
 @Composable
-internal fun HorizontalAllianceButtons(
-    fontStyle: TextStyle = MaterialTheme.typography.headlineSmall
+internal fun MeasureHorizontalAllianceButtons(
+    fontStyle: TextStyle,
+    redText: String,
+    blueText: String,
 ) {
     Row(
-        modifier = Modifier.width(IntrinsicSize.Min)
+        modifier = Modifier
+            .width(IntrinsicSize.Min)
+            .height(IntrinsicSize.Max)
     ) {
         Surface(
-            shape = MaterialTheme.shapes.large,
-            color = Color.Blue,
+            modifier = Modifier
+                .weight(1f),
         ) {
             Text(
-                text = "Red Alliance",
+                text = redText,
                 textAlign = TextAlign.Center,
                 style = fontStyle,
                 maxLines = 2,
                 modifier = Modifier
+                    .heightIn(min = 60.dp)
                     .padding(all = 8.dp)
-                    .heightIn(min = 50.dp)
-                    .requiredWidthIn()
-                    .weight(1f)
+                    .fillMaxHeight()
                     .wrapContentHeight(),
             )
         }
+
         Spacer(modifier = Modifier.width(16.dp))
+
         Surface(
-            shape = MaterialTheme.shapes.large,
-            contentColor = Color.White,
+            modifier = Modifier
+                .weight(1f),
         ) {
             Text(
-                text = "Blue Alliance",
+                text = blueText,
                 textAlign = TextAlign.Center,
                 style = fontStyle,
                 maxLines = 2,
                 modifier = Modifier
-                    .padding(all = 8.dp)
                     .heightIn(min = 50.dp)
-                    .weight(1f)
-
+                    .padding(all = 8.dp)
+                    .fillMaxHeight()
                     .wrapContentHeight(),
             )
         }
@@ -83,13 +116,15 @@ internal fun HorizontalAllianceButtons(
 @Composable
 internal fun AllianceButtonsInternal(
     modifier: Modifier = Modifier,
-    compact: Boolean = false,
-    fontStyle: TextStyle = MaterialTheme.typography.headlineSmall
+    vertical: Boolean = false,
+    fontStyle: TextStyle,
+    redText: String,
+    blueText: String,
+    onClick: (index: Int) -> Unit,
+    activeIndex: Int?
 ) {
-    val view = LocalView.current
-
-    var redActive by rememberSaveable { mutableStateOf(false) }
-    var blueActive by rememberSaveable { mutableStateOf(false) }
+    val redActive = activeIndex == 1
+    val blueActive = activeIndex == 2
     val redColor by animateColorAsState(
         targetValue = if (redActive) Color.Red else MaterialTheme.colorScheme.secondaryContainer
     )
@@ -106,32 +141,23 @@ internal fun AllianceButtonsInternal(
     Surface(
         modifier = modifier,
         color = redColor,
-        checked = redActive,
-        onCheckedChange = { isChecked ->
-            view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-            if(isChecked){
-                redActive = true
-                blueActive = false
-            } else {
-                redActive = false
-            }
-        },
+        onClick = {onClick(1)},
         shape = MaterialTheme.shapes.large,
         contentColor = redTextColor,
     ) {
         Text(
-            text = "Red Alliance",
+            text = redText,
             textAlign = TextAlign.Center,
             style = fontStyle,
             modifier = Modifier
-                .fillMaxSize()
+                .heightIn(min = 60.dp)
                 .padding(all = 8.dp)
-                .heightIn(min = 50.dp)
+                .fillMaxHeight()
                 .wrapContentHeight(),
         )
     }
 
-    if(compact)
+    if(vertical)
         Spacer(modifier = Modifier.height(8.dp))
     else
         Spacer(modifier = Modifier.width(16.dp))
@@ -139,27 +165,18 @@ internal fun AllianceButtonsInternal(
     Surface(
         modifier = modifier,
         color = blueColor,
-        checked = blueActive,
-        onCheckedChange = { isChecked ->
-            view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-            if(isChecked){
-                blueActive = true
-                redActive = false
-            } else {
-                blueActive = false
-            }
-        },
+        onClick = {onClick(2)},
         shape = MaterialTheme.shapes.large,
         contentColor = blueTextColor,
     ) {
         Text(
-            text = "Blue Alliance",
+            text = blueText,
             textAlign = TextAlign.Center,
             style = fontStyle,
             modifier = Modifier
-                .fillMaxSize()
+                .heightIn(min = 60.dp)
                 .padding(all = 8.dp)
-                .heightIn(min = 50.dp)
+                .fillMaxHeight()
                 .wrapContentHeight(),
         )
     }
