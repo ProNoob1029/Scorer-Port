@@ -30,7 +30,10 @@ fun TitleCard (
                 viewToMeasure = {
                     Text(text = "$title$points points", style = titleStyle)
                 }
-            ) { compact ->
+            ) { maxWidth, measuredWidth ->
+
+                val compact = maxWidth < measuredWidth
+
                 if(compact) {
                     Text(
                         text = "$title$points points",

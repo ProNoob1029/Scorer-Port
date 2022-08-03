@@ -30,7 +30,9 @@ fun AllianceButtons(
                 redText = redText,
                 blueText = blueText
             )
-    }) { compact ->
+    }) { maxWidth, measuredWidth ->
+
+        val compact = maxWidth < measuredWidth
 
         if (compact) {
             Column {

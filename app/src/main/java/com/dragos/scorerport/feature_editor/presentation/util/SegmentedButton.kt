@@ -24,28 +24,14 @@ import androidx.compose.ui.unit.dp
 fun SegmentedButton(
     modifier: Modifier = Modifier,
     items: List<String>,
-    selectedIndex: Int?,
-    onItemClick: (index: Int) -> Unit,
+    selectedIndex: Int? = null,
+    onItemClick: (index: Int) -> Unit = {},
     color: Color = MaterialTheme.colorScheme.primary,
     enabled: Boolean = true,
-    compact: Boolean = false
+    vertical: Boolean = false
 ) {
-    /*MeasureViewWidth(
-        modifier = modifier,
-        viewToMeasure = {
-            HorizontalSegmentedButton(
-                items = items,
-                selectedIndex = selectedIndex,
-                onItemClick = onItemClick,
-                color = color,
-                enabled = enabled
-            )
-        }
-    ) { compact ->
 
-    }*/
-
-    if (!compact) {
+    if (!vertical) {
         HorizontalSegmentedButton(
             modifier = modifier,
             items = items,
