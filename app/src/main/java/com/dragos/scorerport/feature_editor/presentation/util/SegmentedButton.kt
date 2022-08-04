@@ -1,5 +1,6 @@
 package com.dragos.scorerport.feature_editor.presentation.util
 
+import android.view.HapticFeedbackConstants
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
@@ -9,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
@@ -121,6 +123,8 @@ internal fun SegmetedButtonComponents (
     else
         Modifier.wrapContentHeight()
 
+    val view = LocalView.current
+
     items.forEachIndexed { index, item ->
         val selected = selectedIndex == index
         val surfaceColor by animateColorAsState(
@@ -144,7 +148,10 @@ internal fun SegmetedButtonComponents (
                 containerColor = surfaceColor,
                 contentColor = contentColor
             ),
-            onClick = {onItemClick(index)},
+            onClick = {
+                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                onItemClick(index)
+                      },
             contentPadding = PaddingValues(
                 horizontal = 4.dp
             ),

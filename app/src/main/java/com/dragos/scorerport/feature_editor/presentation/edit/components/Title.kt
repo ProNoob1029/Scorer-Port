@@ -1,6 +1,5 @@
 package com.dragos.scorerport.feature_editor.presentation.edit.components
 
-import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -13,7 +12,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import com.dragos.scorerport.feature_editor.presentation.util.OutlinedTextField
 
@@ -22,7 +20,6 @@ import com.dragos.scorerport.feature_editor.presentation.util.OutlinedTextField
 fun Title(
     modifier: Modifier = Modifier,
 ) {
-
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -58,13 +55,10 @@ fun Title(
 
         var activeIndex by rememberSaveable { mutableStateOf( null as Int? ) }
 
-        val view = LocalView.current
-
         AllianceButtons(
             modifier = Modifier.padding(horizontal = 16.dp),
             activeIndex = activeIndex,
             onItemClick = { index ->
-                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                 activeIndex =
                     if (activeIndex == index)
                         null

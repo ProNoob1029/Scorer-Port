@@ -1,5 +1,6 @@
 package com.dragos.scorerport.feature_editor.presentation.edit.components
 
+import android.view.HapticFeedbackConstants
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -7,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -131,10 +133,15 @@ internal fun AllianceButtonsInternal(
         targetValue = if (blueActive) Color.White else LocalContentColor.current
     )
 
+    val view = LocalView.current
+
     Surface(
         modifier = modifier,
         color = redColor,
-        onClick = {onClick(1)},
+        onClick = {
+            view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+            onClick(1)
+                  },
         shape = MaterialTheme.shapes.large,
         contentColor = redTextColor,
     ) {
@@ -158,7 +165,10 @@ internal fun AllianceButtonsInternal(
     Surface(
         modifier = modifier,
         color = blueColor,
-        onClick = {onClick(2)},
+        onClick = {
+            view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+            onClick(2)
+                  },
         shape = MaterialTheme.shapes.large,
         contentColor = blueTextColor,
     ) {
