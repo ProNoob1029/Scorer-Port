@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import com.dragos.scorerport.feature_editor.presentation.util.MeasureViewWidth
 import com.dragos.scorerport.feature_editor.presentation.util.SegmentedButton
 
@@ -17,12 +18,14 @@ fun TextButtons (
     items: List<String>,
     label: String,
     selectedIndex: Int?,
-    onItemClick: (index: Int) -> Unit
+    onItemClick: (index: Int) -> Unit,
+    textStyle: TextStyle = MaterialTheme.typography.titleLarge
 ) {
     Measurements(
         modifier = modifier,
         items = items,
-        label = label
+        label = label,
+        textStyle = textStyle
     ) { inColumn, compactButton ->
         if (inColumn) {
             Column(modifier = Modifier.fillMaxWidth()) {
@@ -33,7 +36,8 @@ fun TextButtons (
                     onItemClick = onItemClick,
                     compactButton = compactButton,
                     modifier = Modifier.align(Alignment.Start),
-                    buttonModifier = Modifier.align(Alignment.End)
+                    buttonModifier = Modifier.align(Alignment.End),
+                    textStyle = textStyle
                 )
             }
         } else {
@@ -47,112 +51,12 @@ fun TextButtons (
                     selectedIndex = selectedIndex,
                     onItemClick = onItemClick,
                     compactButton = compactButton,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    textStyle = textStyle
                 )
             }
         }
     }
-
-    /*MeasureViewWidthInDp(
-        modifier = modifier,
-        viewToMeasure = {
-            Text(
-                text = label,
-                style = MaterialTheme.typography.titleLarge,
-            )
-        }
-    ) { measuredWidthText, maxWidth ->
-        MeasureViewWidthInDp(
-            viewToMeasure = {
-                SegmentedButton(
-                    items = items,
-                    selectedIndex = selectedIndex,
-                    onItemClick = onItemClick,
-                )
-            }
-        ) { measuredWidthButtons, _ ->
-            if(measuredWidthText + measuredWidthButtons <= maxWidth) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = label,
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.weight(1f),
-                    )
-                    SegmentedButton(
-                        items = items,
-                        selectedIndex = selectedIndex,
-                        onItemClick = onItemClick,
-                    )
-                }
-            } else if (measuredWidthButtons <= maxWidth) {
-                Column(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = label,
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.align(Alignment.Start),
-                    )
-                    SegmentedButton(
-                        modifier = Modifier.align(Alignment.End),
-                        items = items,
-                        selectedIndex = selectedIndex,
-                        onItemClick = onItemClick,
-                    )
-                }
-            } else {
-                MeasureViewWidthInDp(
-                    viewToMeasure = {
-                        SegmentedButton(
-                            items = items,
-                            vertical = true,
-                            selectedIndex = selectedIndex,
-                            onItemClick = onItemClick,
-                        )
-                    }
-                ) { measuredWidthCompact, _ ->
-                    if (measuredWidthCompact + measuredWidthText <= maxWidth) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = label,
-                                style = MaterialTheme.typography.titleLarge,
-                                modifier = Modifier.weight(1f),
-                            )
-                            SegmentedButton(
-                                vertical = true,
-                                items = items,
-                                selectedIndex = selectedIndex,
-                                onItemClick = onItemClick,
-                            )
-                        }
-                    } else {
-                        Column(
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(
-                                text = label,
-                                style = MaterialTheme.typography.titleLarge,
-                                modifier = Modifier.align(Alignment.Start),
-                            )
-                            SegmentedButton(
-                                modifier = Modifier.align(Alignment.End),
-                                items = items,
-                                vertical = true,
-                                selectedIndex = selectedIndex,
-                                onItemClick = onItemClick,
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }*/
 }
 
 @Composable
@@ -163,12 +67,13 @@ fun TextButtonsComponents(
     onItemClick: (index: Int) -> Unit,
     compactButton: Boolean,
     modifier: Modifier = Modifier,
-    buttonModifier: Modifier = Modifier
+    buttonModifier: Modifier = Modifier,
+    textStyle: TextStyle
 ) {
     Text(
         modifier = modifier,
         text = label,
-        style = MaterialTheme.typography.titleLarge
+        style = textStyle
     )
     SegmentedButton(
         modifier = buttonModifier,
@@ -184,58 +89,29 @@ internal fun Measurements(
     modifier: Modifier = Modifier,
     items: List<String>,
     label: String,
+    textStyle: TextStyle,
     content: @Composable (inColumn: Boolean, compactButton: Boolean) -> Unit
 ) {
     MeasureViewWidth(
         modifier = modifier,
         viewToMeasure = listOf(
-            {
-                Text(
-                    text = label,
-                    style = MaterialTheme.typography.titleLarge,
-                )
-            },
-            {
-                SegmentedButton(
-                    items = items
-                )
-            },
-            {
-                SegmentedButton(
-                    items = items,
-                    vertical = true
-                )
-            }
+            { Text(text = label, style = textStyle) },
+            { SegmentedButton(items = items) },
+            { SegmentedButton(items = items, vertical = true) }
         )
     ) { maxWidth, measuredWidths ->
         val textWidth = measuredWidths[0]
         val buttonWidth = measuredWidths[1]
         val compactButtonWidth = measuredWidths[2]
         when {
-            maxWidth >= textWidth + buttonWidth -> {
-                content(
-                    inColumn = false,
-                    compactButton = false
-                )
-            }
-            maxWidth >= buttonWidth -> {
-                content(
-                    inColumn = true,
-                    compactButton = false
-                )
-            }
-            maxWidth >= textWidth + compactButtonWidth -> {
-                content(
-                    inColumn = false,
-                    compactButton = true
-                )
-            }
-            else -> {
-                content(
-                    inColumn = true,
-                    compactButton = true
-                )
-            }
+            maxWidth >= textWidth + buttonWidth ->
+                content(inColumn = false, compactButton = false)
+            maxWidth >= buttonWidth ->
+                content(inColumn = true, compactButton = false)
+            maxWidth >= textWidth + compactButtonWidth ->
+                content(inColumn = false, compactButton = true)
+            else ->
+                content(inColumn = true, compactButton = true)
         }
     }
 }

@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
@@ -19,6 +18,7 @@ import androidx.compose.ui.unit.dp
  * @param onItemClick Called when an item is clicked, with that items index as the parameter
  * @param color Background color of the selected item
  * @param enabled Enabled state of this button
+ * @param vertical Makes the buttons vertically stacked for a more compact size
  */
 @Composable
 fun SegmentedButton(
@@ -30,170 +30,131 @@ fun SegmentedButton(
     enabled: Boolean = true,
     vertical: Boolean = false
 ) {
-
     if (!vertical) {
-        HorizontalSegmentedButton(
-            modifier = modifier,
-            items = items,
-            selectedIndex = selectedIndex,
-            onItemClick = onItemClick,
-            color = color,
-            enabled = enabled
-        )
+        Row(
+            modifier = modifier
+                .height(IntrinsicSize.Max)
+                .width(IntrinsicSize.Max)
+        ) {
+            SegmetedButtonComponents(
+                modifier = Modifier.weight(1f),
+                items = items,
+                selectedIndex = selectedIndex,
+                onItemClick = onItemClick,
+                color = color,
+                enabled = enabled,
+                vertical = false
+            )
+        }
     } else {
-        VerticalSegmentedButton(
-            modifier = modifier,
-            items = items,
-            selectedIndex = selectedIndex,
-            onItemClick = onItemClick,
-            color = color,
-            enabled = enabled
-        )
-    }
-}
-
-@Composable
-internal fun VerticalSegmentedButton (
-    modifier: Modifier = Modifier,
-    items: List<String>,
-    selectedIndex: Int?,
-    onItemClick: (index: Int) -> Unit,
-    color: Color = MaterialTheme.colorScheme.primary,
-    enabled: Boolean = true,
-) {
-    Column(
-        modifier = modifier
-            .height(IntrinsicSize.Max)
-            .width(IntrinsicSize.Max)
-    ) {
-        items.forEachIndexed { index, item ->
-            val selected = selectedIndex == index
-            val surfaceColor by animateColorAsState(
-                if (selected) color else Color.Transparent,
-            )
-            val contentColor by animateColorAsState(
-                if (selected) contentColorFor(backgroundColor = color) else MaterialTheme.colorScheme.onSurface,
-            )
-            LocalDensity.current
-            OutlinedButton(
+        Column(
+            modifier = modifier
+                .height(IntrinsicSize.Max)
+                .width(IntrinsicSize.Max)
+        ) {
+            SegmetedButtonComponents(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth(),
-                shape = when (index) {
-                    0 -> RoundedCornerShape(
-                        topStartPercent = 50,
-                        topEndPercent = 50,
-                        bottomStartPercent = 0,
-                        bottomEndPercent = 0
-                    )
-                    items.size - 1 -> RoundedCornerShape(
-                        topStartPercent = 0,
-                        topEndPercent = 0,
-                        bottomStartPercent = 50,
-                        bottomEndPercent = 50
-                    )
-                    else -> RoundedCornerShape(
-                        topStartPercent = 0,
-                        topEndPercent = 0,
-                        bottomStartPercent = 0,
-                        bottomEndPercent = 0
-                    )
-                },
-                border = BorderStroke(
-                    1.dp,
-                    MaterialTheme.colorScheme.outline
-                ),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = surfaceColor,
-                    contentColor = contentColor
-                ),
-                onClick = {onItemClick(index)},
-                contentPadding = PaddingValues(
-                    horizontal = 4.dp
-                ),
+                items = items,
+                selectedIndex = selectedIndex,
+                onItemClick = onItemClick,
+                color = color,
                 enabled = enabled,
-            ) {
-
-                Text(
-                    text = item,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .width(IntrinsicSize.Min)
-                )
-            }
+                vertical = true
+            )
         }
     }
 }
 
 @Composable
-internal fun HorizontalSegmentedButton (
+internal fun SegmetedButtonComponents (
     modifier: Modifier = Modifier,
     items: List<String>,
-    selectedIndex: Int?,
-    onItemClick: (index: Int) -> Unit,
+    selectedIndex: Int? = null,
+    onItemClick: (index: Int) -> Unit = {},
     color: Color = MaterialTheme.colorScheme.primary,
     enabled: Boolean = true,
+    vertical: Boolean = false
 ) {
-    Row(
-        modifier = modifier
-            .height(IntrinsicSize.Max)
-            .width(IntrinsicSize.Max)
-    ) {
-        items.forEachIndexed { index, item ->
-            val selected = selectedIndex == index
-            val surfaceColor by animateColorAsState(
-                if (selected) color else Color.Transparent,
-            )
-            val contentColor by animateColorAsState(
-                if (selected) contentColorFor(backgroundColor = color) else MaterialTheme.colorScheme.onSurface,
-            )
-            LocalDensity.current
-            OutlinedButton(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight(),
-                shape = when (index) {
-                    0 -> RoundedCornerShape(
-                        topStartPercent = 50,
-                        topEndPercent = 0,
-                        bottomStartPercent = 50,
-                        bottomEndPercent = 0
-                    )
-                    items.size - 1 -> RoundedCornerShape(
-                        topStartPercent = 0,
-                        topEndPercent = 50,
-                        bottomStartPercent = 0,
-                        bottomEndPercent = 50
-                    )
-                    else -> RoundedCornerShape(
-                        topStartPercent = 0,
-                        topEndPercent = 0,
-                        bottomStartPercent = 0,
-                        bottomEndPercent = 0
-                    )
-                },
-                border = BorderStroke(
-                    1.dp,
-                    MaterialTheme.colorScheme.outline
-                ),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = surfaceColor,
-                    contentColor = contentColor
-                ),
-                onClick = {onItemClick(index)},
-                contentPadding = PaddingValues(
-                    horizontal = 4.dp
-                ),
-                enabled = enabled,
-            ) {
 
-                Text(
-                    text = item,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .wrapContentHeight()
-                )
-            }
+   val startShape = if (vertical)
+       RoundedCornerShape(
+           topStartPercent = 50,
+           topEndPercent = 50,
+           bottomStartPercent = 0,
+           bottomEndPercent = 0
+       )
+    else
+       RoundedCornerShape(
+           topStartPercent = 50,
+           topEndPercent = 0,
+           bottomStartPercent = 50,
+           bottomEndPercent = 0
+       )
+    val squareShape = RoundedCornerShape(
+        topStartPercent = 0,
+        topEndPercent = 0,
+        bottomStartPercent = 0,
+        bottomEndPercent = 0
+    )
+    val endShape = if (vertical)
+        RoundedCornerShape(
+            topStartPercent = 0,
+            topEndPercent = 0,
+            bottomStartPercent = 50,
+            bottomEndPercent = 50
+        )
+    else
+        RoundedCornerShape(
+            topStartPercent = 0,
+            topEndPercent = 50,
+            bottomStartPercent = 0,
+            bottomEndPercent = 50
+        )
+    val newModifier = if (vertical)
+        modifier.fillMaxWidth()
+    else
+        modifier.fillMaxHeight()
+    val textModifier = if (vertical)
+        Modifier.width(IntrinsicSize.Min)
+    else
+        Modifier.wrapContentHeight()
+
+    items.forEachIndexed { index, item ->
+        val selected = selectedIndex == index
+        val surfaceColor by animateColorAsState(
+            if (selected) color else Color.Transparent,
+        )
+        val contentColor by animateColorAsState(
+            if (selected) contentColorFor(backgroundColor = color) else MaterialTheme.colorScheme.onSurface,
+        )
+        OutlinedButton(
+            modifier = newModifier,
+            shape = when (index) {
+                0 -> startShape
+                items.size - 1 -> endShape
+                else -> squareShape
+            },
+            border = BorderStroke(
+                1.dp,
+                MaterialTheme.colorScheme.outline
+            ),
+            colors = ButtonDefaults.outlinedButtonColors(
+                containerColor = surfaceColor,
+                contentColor = contentColor
+            ),
+            onClick = {onItemClick(index)},
+            contentPadding = PaddingValues(
+                horizontal = 4.dp
+            ),
+            enabled = enabled,
+        ) {
+            Text(
+                text = item,
+                textAlign = TextAlign.Center,
+                modifier = textModifier
+            )
         }
     }
 }

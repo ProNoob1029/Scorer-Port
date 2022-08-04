@@ -48,7 +48,7 @@ fun EditScreen() {
                         .padding(top = 8.dp),
                     items = listOf(
                         "Storage",
-                        "Warehouseeeeeeee"
+                        "Warehouse"
                     ),
                     label = "Parked in: ",
                     selectedIndex = selectedIndex,

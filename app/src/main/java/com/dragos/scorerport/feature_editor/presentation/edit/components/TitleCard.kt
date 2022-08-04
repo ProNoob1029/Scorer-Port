@@ -68,42 +68,4 @@ fun TitleCard (
             }
         }
     }
-
-
-
-    /*Surface(
-        color = surfaceColor,
-        modifier = modifier,
-    ) {
-        Row (
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-        ) {
-            Text(
-                text = title,
-                textAlign =
-                if (hasPoints)
-                    TextAlign.Start
-                else
-                    TextAlign.Center,
-                style = titleStyle,
-                modifier = Modifier
-                *//*if (hasPoints)
-                    Modifier
-                else
-                    Modifier.weight(1f)*//*,
-            )
-
-            if(hasPoints)
-
-                //Spacer(modifier = Modifier.weight(1f))
-
-                Text(
-                    text = "$points points",
-                    textAlign = TextAlign.End,
-                    style = titleStyle,
-                )
-        }
-    }*/
 }

@@ -47,7 +47,7 @@ fun Title(
             },
             keyboardOptions = KeyboardOptions(autoCorrect = false),
             textStyle = MaterialTheme.typography.titleLarge,
-            labelBodySmall = MaterialTheme.typography.titleMedium
+            labelBodySmall = MaterialTheme.typography.titleMedium,
         )
 
         Spacer(modifier = Modifier.height(16.dp))

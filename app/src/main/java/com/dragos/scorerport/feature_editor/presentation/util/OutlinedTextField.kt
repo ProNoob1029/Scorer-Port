@@ -1,6 +1,5 @@
 package com.dragos.scorerport.feature_editor.presentation.util
 
-import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
@@ -15,11 +14,9 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.takeOrElse
@@ -94,9 +91,6 @@ fun OutlinedTextField(
                         interactionSource = interactionSource,
                         bodySmall = labelBodySmall,
                         bodyLarge = labelBodyLarge,
-                        colors = colors,
-                        enabled = enabled,
-                        isError = isError,
                         visualTransformation = visualTransformation
                     ) },
                 leadingIcon = leadingIcon,
@@ -120,15 +114,12 @@ fun OutlinedTextField(
     ))
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+//@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun MyLabel (
-    colors: TextFieldColors = TextFieldDefaults.outlinedTextFieldColors(),
     visualTransformation: VisualTransformation = VisualTransformation.None,
     value: String,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    isError: Boolean = false,
-    enabled: Boolean = true,
     label: @Composable (() -> Unit),
     bodySmall: TextStyle = MaterialTheme.typography.bodySmall,
     bodyLarge: TextStyle = MaterialTheme.typography.bodyLarge,
@@ -136,16 +127,13 @@ internal fun MyLabel (
     val transformedText = remember(value, visualTransformation) {
         visualTransformation.filter(AnnotatedString(value))
     }.text.text
+
     val isFocused = interactionSource.collectIsFocusedAsState().value
 
     val inputState = when {
         isFocused -> InputPhase.Focused
         transformedText.isEmpty() -> InputPhase.UnfocusedEmpty
         else -> InputPhase.UnfocusedNotEmpty
-    }
-
-    val labelColor: @Composable (InputPhase) -> Color = {
-        colors.labelColor(enabled, isError, interactionSource).value
     }
 
     val transition = updateTransition(inputState, label = "TextFieldInputState")
@@ -161,43 +149,16 @@ internal fun MyLabel (
         }
     }
 
-    val labelContentColor by transition.animateColor(
-        transitionSpec = { tween(durationMillis = AnimationDuration) },
-        label = "LabelContentColor",
-        targetValueByState = labelColor
+    val labelTextStyle = lerp(
+        bodyLarge,
+        bodySmall,
+        labelProgress
     )
 
-    val decoratedLabel: @Composable (() -> Unit) = label.let {
-        @Composable {
-
-            val labelTextStyle = lerp(
-                bodyLarge,
-                bodySmall,
-                labelProgress
-            )
-
-            Decoration(labelContentColor, labelTextStyle, it)
-        }
-    }
-
-    decoratedLabel()
-}
-
-
-
-@Composable
-internal fun Decoration(
-    contentColor: Color,
-    typography: TextStyle,
-    content: @Composable () -> Unit
-) {
-    val contentWithColor: @Composable () -> Unit = @Composable {
-        CompositionLocalProvider(
-            LocalContentColor provides contentColor,
-            content = content
-        )
-    }
-    ProvideTextStyle(typography, contentWithColor)
+    ProvideTextStyle(
+        value = labelTextStyle,
+        content = label
+    )
 }
 
 private enum class InputPhase {

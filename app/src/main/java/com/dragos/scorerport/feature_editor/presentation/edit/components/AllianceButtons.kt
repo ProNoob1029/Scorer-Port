@@ -21,7 +21,6 @@ fun AllianceButtons(
     activeIndex: Int?,
     onItemClick: (index: Int) -> Unit,
 ) {
-
     MeasureViewWidth(
         modifier = modifier,
         viewToMeasure = {
@@ -31,9 +30,7 @@ fun AllianceButtons(
                 blueText = blueText
             )
     }) { maxWidth, measuredWidth ->
-
         val compact = maxWidth < measuredWidth
-
         if (compact) {
             Column {
                 AllianceButtonsInternal(
@@ -59,10 +56,6 @@ fun AllianceButtons(
             }
         }
     }
-
-
-
-
 }
 
 @Composable
@@ -92,9 +85,7 @@ internal fun MeasureHorizontalAllianceButtons(
                     .wrapContentHeight(),
             )
         }
-
         Spacer(modifier = Modifier.width(16.dp))
-
         Surface(
             modifier = Modifier
                 .weight(1f),
