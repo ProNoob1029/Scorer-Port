@@ -8,6 +8,9 @@ val Typography = Typography(
     headlineLarge = Typography().headlineLarge.copy(
         fontWeight = FontWeight.Medium
     ),
+    headlineMedium = Typography().headlineMedium.copy(
+        fontWeight = FontWeight.Medium
+    ),
     headlineSmall = Typography().headlineSmall.copy(
         fontWeight = FontWeight.Medium
     ),

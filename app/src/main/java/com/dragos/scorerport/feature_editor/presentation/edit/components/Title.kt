@@ -28,7 +28,11 @@ fun Title(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
-        TitleCard(title = "New Matchhh", modifier = Modifier.padding(horizontal = 16.dp))
+        TitleCard(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            title = "New Match",
+            titleStyle = MaterialTheme.typography.headlineLarge
+        )
 
         Spacer(modifier = Modifier.height(8.dp))
 

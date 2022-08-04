@@ -19,7 +19,7 @@ fun TitleCard (
     title: String,
     points: Int? = null,
     surfaceColor: Color = MaterialTheme.colorScheme.primaryContainer,
-    titleStyle: TextStyle = MaterialTheme.typography.headlineLarge,
+    titleStyle: TextStyle = MaterialTheme.typography.headlineMedium,
 ) {
     val hasPoints = points != null
 
