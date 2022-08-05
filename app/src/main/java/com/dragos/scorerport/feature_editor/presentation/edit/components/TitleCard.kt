@@ -3,6 +3,7 @@ package com.dragos.scorerport.feature_editor.presentation.edit.components
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -11,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.dragos.scorerport.feature_editor.presentation.util.MeasureViewWidth
 
 @Composable
@@ -23,10 +25,13 @@ fun TitleCard (
 ) {
     val hasPoints = points != null
 
-    Surface(color = surfaceColor) {
+    Surface(
+        modifier = modifier,
+        color = surfaceColor
+    ) {
         if(hasPoints) {
             MeasureViewWidth(
-                modifier = modifier,
+                modifier = Modifier.padding(horizontal = 16.dp),
                 viewToMeasure = {
                     Text(text = "$title$points points", style = titleStyle)
                 }
@@ -58,7 +63,7 @@ fun TitleCard (
                 }
             }
         } else {
-            Box(modifier = modifier) {
+            Box(modifier = Modifier.padding(horizontal = 16.dp)) {
                 Text(
                     text = title,
                     textAlign = TextAlign.Center,
