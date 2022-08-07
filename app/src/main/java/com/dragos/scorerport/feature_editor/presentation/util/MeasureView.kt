@@ -8,15 +8,16 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 
 @Composable
-fun MeasureViewWidth (
+fun MeasureView (
     modifier: Modifier = Modifier,
     viewToMeasure: @Composable () -> Unit,
-    content: @Composable (maxWidth: Dp, measuredWidth: Dp) -> Unit
+    content: @Composable (maxWidth: Dp, measuredWidth: Dp, measuredHeight: Dp) -> Unit
 ) {
     BoxWithConstraints(modifier = modifier) {
-        MeasureViewWidthInternal(viewToMeasure = listOf(viewToMeasure)) { measuredWidth ->
+        MeasureViewInternal(viewToMeasure = listOf(viewToMeasure)) { measuredWidth, measuredHeight ->
             content(
                 measuredWidth = measuredWidth[0],
+                measuredHeight = measuredHeight[0],
                 maxWidth = maxWidth
             )
         }
@@ -24,36 +25,40 @@ fun MeasureViewWidth (
 }
 
 @Composable
-fun MeasureViewWidth (
+fun MeasureView (
     modifier: Modifier = Modifier,
     viewToMeasure: List<@Composable () -> Unit>,
-    content: @Composable (maxWidth: Dp, measuredWidths: List<Dp>) -> Unit
+    content: @Composable (maxWidth: Dp, measuredWidths: List<Dp>, measuredHeights: List<Dp>) -> Unit
 ) {
     BoxWithConstraints(modifier = modifier) {
-        MeasureViewWidthInternal(
+        MeasureViewInternal(
             viewToMeasure = viewToMeasure
-        ) { newMeasuredWidths ->
+        ) { newMeasuredWidths, newMeasuredHeights ->
             content(
                 maxWidth = maxWidth,
-                measuredWidths = newMeasuredWidths
+                measuredWidths = newMeasuredWidths,
+                measuredHeights = newMeasuredHeights,
             )
         }
     }
 }
 
 @Composable
-fun MeasureViewWidthInternal (
+fun MeasureViewInternal (
     viewToMeasure: List<@Composable () -> Unit>,
-    content: @Composable (measuredWidths: List<Dp>) -> Unit
+    content: @Composable (measuredWidths: List<Dp>, measuredHeights: List<Dp>) -> Unit
 ) {
     val measuredWidths = mutableListOf<Dp>()
+    val measuredHeights = mutableListOf<Dp>()
     SubcomposeLayout { constraints ->
         viewToMeasure.forEachIndexed { index, viewToMeasure ->
-            measuredWidths.add(subcompose("viewToMeasure$index", viewToMeasure)[0]
-                .measure(Constraints()).width.toDp())
+            val measurement = subcompose("viewToMeasure$index", viewToMeasure)[0]
+                .measure(Constraints())
+            measuredWidths.add(measurement.width.toDp())
+            measuredHeights.add(measurement.height.toDp())
         }
         val contentPlaceable = subcompose("content") {
-            content(measuredWidths)
+            content(measuredWidths, measuredHeights)
         }[0].measure(constraints)
         layout(contentPlaceable.width, contentPlaceable.height) {
             contentPlaceable.place(0, 0)

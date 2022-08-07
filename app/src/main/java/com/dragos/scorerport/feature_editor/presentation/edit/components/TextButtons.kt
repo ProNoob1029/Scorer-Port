@@ -1,15 +1,13 @@
 package com.dragos.scorerport.feature_editor.presentation.edit.components
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
-import com.dragos.scorerport.feature_editor.presentation.util.MeasureViewWidth
+import com.dragos.scorerport.feature_editor.presentation.util.MeasureView
 import com.dragos.scorerport.feature_editor.presentation.util.SegmentedButton
 
 @Composable
@@ -92,14 +90,14 @@ internal fun Measurements(
     textStyle: TextStyle,
     content: @Composable (inColumn: Boolean, compactButton: Boolean) -> Unit
 ) {
-    MeasureViewWidth(
+    MeasureView(
         modifier = modifier,
         viewToMeasure = listOf(
-            { Text(text = label, style = textStyle) },
+            { Text(text = label, style = textStyle, modifier = Modifier.width(IntrinsicSize.Min)) },
             { SegmentedButton(items = items) },
             { SegmentedButton(items = items, vertical = true) }
         )
-    ) { maxWidth, measuredWidths ->
+    ) { maxWidth, measuredWidths, _ ->
         val textWidth = measuredWidths[0]
         val buttonWidth = measuredWidths[1]
         val compactButtonWidth = measuredWidths[2]

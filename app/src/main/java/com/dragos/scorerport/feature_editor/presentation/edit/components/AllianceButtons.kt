@@ -12,7 +12,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.dragos.scorerport.feature_editor.presentation.util.MeasureViewWidth
+import com.dragos.scorerport.feature_editor.presentation.util.MeasureView
 
 @Composable
 fun AllianceButtons(
@@ -23,7 +23,7 @@ fun AllianceButtons(
     activeIndex: Int?,
     onItemClick: (index: Int) -> Unit,
 ) {
-    MeasureViewWidth(
+    MeasureView(
         modifier = modifier,
         viewToMeasure = {
             MeasureHorizontalAllianceButtons(
@@ -31,7 +31,7 @@ fun AllianceButtons(
                 redText = redText,
                 blueText = blueText
             )
-    }) { maxWidth, measuredWidth ->
+    }) { maxWidth, measuredWidth, _ ->
         val compact = maxWidth < measuredWidth
         if (compact) {
             Column {

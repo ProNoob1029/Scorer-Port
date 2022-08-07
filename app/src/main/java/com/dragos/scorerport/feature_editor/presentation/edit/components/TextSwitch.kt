@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
-import com.dragos.scorerport.feature_editor.presentation.util.MeasureViewWidth
+import com.dragos.scorerport.feature_editor.presentation.util.MeasureView
 
 @Composable
 fun TextSwitch (
@@ -65,15 +65,17 @@ internal fun MeasureTextSwitch (
     textStyle: TextStyle,
     content: @Composable (compact: Boolean) -> Unit
 ) {
-    MeasureViewWidth(
+    MeasureView(
         modifier = modifier,
-        viewToMeasure = {
+        viewToMeasure =
+        {
             Row {
-               Text(text = text, style = textStyle, modifier = Modifier.width(IntrinsicSize.Min))
-               Switch(checked = checked, onCheckedChange = onCheckedChange) 
+                Text(text = text, style = textStyle, modifier = Modifier.width(IntrinsicSize.Min))
+                Switch(checked = checked, onCheckedChange = onCheckedChange)
             }
         }
-    ) { maxWidth, measuredWidth ->  
-        content(compact = measuredWidth > maxWidth)
+    ) { maxWidth, measuredWidth, _ ->
+        val compact = maxWidth < measuredWidth
+        content(compact = compact)
     }
 }

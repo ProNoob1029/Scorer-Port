@@ -103,10 +103,18 @@ fun EditScreen() {
                     text = "Duck delivery"
                 )
 
+                var counter by rememberSaveable { mutableStateOf(0) }
+
                 TextCounter(
-                    modifier = Modifier.padding(top = 8.dp),
-                    counter = 20,
-                    text = "eh"
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .padding(top = 8.dp),
+                    counter = counter,
+                    text = "Freight in storage",
+                    onClickPlus = { counter++ },
+                    onClickMinus = { counter-- },
+                    plusEnabled = counter < 10,
+                    minusEnabled = counter > 0
                 )
             }
         }

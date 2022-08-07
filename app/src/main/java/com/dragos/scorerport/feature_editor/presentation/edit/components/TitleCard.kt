@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.dragos.scorerport.feature_editor.presentation.util.MeasureViewWidth
+import com.dragos.scorerport.feature_editor.presentation.util.MeasureView
 
 @Composable
 fun TitleCard (
@@ -30,7 +30,7 @@ fun TitleCard (
         color = surfaceColor
     ) {
         if(hasPoints) {
-            MeasureViewWidth(
+            MeasureView(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 viewToMeasure = {
                     Text(
@@ -38,7 +38,7 @@ fun TitleCard (
                         style = titleStyle.copy(fontFeatureSettings = "tnum"),
                     )
                 }
-            ) { maxWidth, measuredWidth ->
+            ) { maxWidth, measuredWidth, _ ->
 
                 val compact = maxWidth < measuredWidth
 
