@@ -33,7 +33,10 @@ fun TitleCard (
             MeasureViewWidth(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 viewToMeasure = {
-                    Text(text = "$title$points points", style = titleStyle)
+                    Text(
+                        text = "$title$points points",
+                        style = titleStyle.copy(fontFeatureSettings = "tnum"),
+                    )
                 }
             ) { maxWidth, measuredWidth ->
 
@@ -42,22 +45,22 @@ fun TitleCard (
                 if(compact) {
                     Text(
                         text = "$title$points points",
+                        style = titleStyle.copy(fontFeatureSettings = "tnum"),
+                        textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth(),
-                        style = titleStyle,
-                        textAlign = TextAlign.Center
                     )
                 } else {
                     Row(modifier = Modifier.fillMaxWidth()) {
                         Text(
-                            text = title,
-                            textAlign = TextAlign.Start,
-                            style = titleStyle,
                             modifier = Modifier.weight(1f),
+                            text = title,
+                            style = titleStyle,
+                            textAlign = TextAlign.Start
                         )
                         Text(
                             text = "$points points",
-                            textAlign = TextAlign.End,
-                            style = titleStyle,
+                            style = titleStyle.copy(fontFeatureSettings = "tnum"),
+                            textAlign = TextAlign.End
                         )
                     }
                 }

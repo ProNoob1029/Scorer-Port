@@ -16,10 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.dragos.scorerport.feature_editor.presentation.edit.components.AllianceButtons
-import com.dragos.scorerport.feature_editor.presentation.edit.components.TextButtons
-import com.dragos.scorerport.feature_editor.presentation.edit.components.TextSwitch
-import com.dragos.scorerport.feature_editor.presentation.edit.components.TitleCard
+import com.dragos.scorerport.feature_editor.presentation.edit.components.*
 import com.dragos.scorerport.feature_editor.presentation.util.OutlinedTextField
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,7 +78,9 @@ fun EditScreen() {
                 var selectedIndex by rememberSaveable { mutableStateOf(null as Int?) }
 
                 TextButtons(
-                    modifier = Modifier.padding(horizontal = 16.dp).padding(top = 8.dp),
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .padding(top = 8.dp),
                     items = listOf("Storage", "Warehouse"),
                     label = "Parked in: ",
                     selectedIndex = selectedIndex,
@@ -96,10 +95,18 @@ fun EditScreen() {
                 var checked by rememberSaveable { mutableStateOf(false) }
 
                 TextSwitch(
-                    modifier = Modifier.padding(horizontal = 16.dp).padding(top = 8.dp),
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .padding(top = 8.dp),
                     checked = checked,
                     onCheckedChange = { checked = it },
                     text = "Duck delivery"
+                )
+
+                TextCounter(
+                    modifier = Modifier.padding(top = 8.dp),
+                    counter = 20,
+                    text = "eh"
                 )
             }
         }
