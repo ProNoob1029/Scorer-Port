@@ -1,6 +1,8 @@
 package com.dragos.scorerport.feature_editor.presentation.edit.components
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,10 +17,11 @@ fun TextButtons (
     modifier: Modifier = Modifier,
     items: List<String>,
     label: String,
-    selectedIndex: Int?,
+    selectedIndex: Int,
     onItemClick: (index: Int) -> Unit,
     textStyle: TextStyle = MaterialTheme.typography.titleLarge
 ) {
+    val selected: Int? = if (selectedIndex > 0) selectedIndex - 1 else null
     Measurements(
         modifier = modifier,
         items = items,
@@ -30,7 +33,7 @@ fun TextButtons (
                 TextButtonsComponents(
                     items = items,
                     label = label,
-                    selectedIndex = selectedIndex,
+                    selectedIndex = selected,
                     onItemClick = onItemClick,
                     compactButton = compactButton,
                     modifier = Modifier.align(Alignment.Start),
@@ -46,7 +49,7 @@ fun TextButtons (
                 TextButtonsComponents(
                     items = items,
                     label = label,
-                    selectedIndex = selectedIndex,
+                    selectedIndex = selected,
                     onItemClick = onItemClick,
                     compactButton = compactButton,
                     modifier = Modifier.weight(1f),
@@ -93,7 +96,7 @@ internal fun Measurements(
     MeasureView(
         modifier = modifier,
         viewToMeasure = listOf(
-            { Text(text = label, style = textStyle, modifier = Modifier.width(IntrinsicSize.Min)) },
+            { Text(text = label, style = textStyle) },
             { SegmentedButton(items = items) },
             { SegmentedButton(items = items, vertical = true) }
         )

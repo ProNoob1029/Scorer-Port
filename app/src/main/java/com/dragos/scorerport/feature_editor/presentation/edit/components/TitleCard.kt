@@ -21,8 +21,10 @@ fun TitleCard (
     title: String,
     points: Int? = null,
     surfaceColor: Color = MaterialTheme.colorScheme.primaryContainer,
-    titleStyle: TextStyle = MaterialTheme.typography.headlineMedium,
+    titleStyle: TextStyle? = MaterialTheme.typography.headlineMedium,
 ) {
+    val style: TextStyle = titleStyle ?: MaterialTheme.typography.headlineMedium
+
     val hasPoints = points != null
 
     Surface(
@@ -35,7 +37,7 @@ fun TitleCard (
                 viewToMeasure = {
                     Text(
                         text = "$title$points points",
-                        style = titleStyle.copy(fontFeatureSettings = "tnum"),
+                        style = style.copy(fontFeatureSettings = "tnum"),
                     )
                 }
             ) { maxWidth, measuredWidth, _ ->
@@ -45,7 +47,7 @@ fun TitleCard (
                 if(compact) {
                     Text(
                         text = "$title$points points",
-                        style = titleStyle.copy(fontFeatureSettings = "tnum"),
+                        style = style.copy(fontFeatureSettings = "tnum"),
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth(),
                     )
@@ -54,12 +56,12 @@ fun TitleCard (
                         Text(
                             modifier = Modifier.weight(1f),
                             text = title,
-                            style = titleStyle,
+                            style = style,
                             textAlign = TextAlign.Start
                         )
                         Text(
                             text = "$points points",
-                            style = titleStyle.copy(fontFeatureSettings = "tnum"),
+                            style = style.copy(fontFeatureSettings = "tnum"),
                             textAlign = TextAlign.End
                         )
                     }
@@ -70,7 +72,7 @@ fun TitleCard (
                 Text(
                     text = title,
                     textAlign = TextAlign.Center,
-                    style = titleStyle,
+                    style = style,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }

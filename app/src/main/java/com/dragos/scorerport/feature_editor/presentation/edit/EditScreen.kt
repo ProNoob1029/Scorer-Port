@@ -3,6 +3,7 @@ package com.dragos.scorerport.feature_editor.presentation.edit
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -10,18 +11,19 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.dragos.scorerport.feature_editor.presentation.edit.components.*
 import com.dragos.scorerport.feature_editor.presentation.util.OutlinedTextField
+import com.dragos.scorerport.ui.theme.padding
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditScreen() {
+fun EditScreen(
+    viewModel: EditViewModel = hiltViewModel(),
+) {
     Scaffold { padding ->
         LazyColumn(
             modifier = Modifier
@@ -29,7 +31,7 @@ fun EditScreen() {
                 .padding(padding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            item {
+            /*item {
                 TitleCard(
                     title = "New Match",
                     titleStyle = MaterialTheme.typography.headlineLarge
@@ -40,8 +42,7 @@ fun EditScreen() {
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .padding(top = 8.dp),
+                        .padding(MaterialTheme.padding.inRow),
                     value = title,
                     onValueChange = { title = it },
                     label = {
@@ -66,7 +67,9 @@ fun EditScreen() {
                             if (activeIndex == index)
                                 null
                             else index
-                    }
+                    },
+                    redText= "Red Alliance",
+                    blueText= "Blue Alliance",
                 )
 
                 TitleCard(
@@ -116,6 +119,98 @@ fun EditScreen() {
                     plusEnabled = counter < 10,
                     minusEnabled = counter > 0
                 )
+            }*/
+
+            items(
+                items = screen
+            ) { item ->
+                when(item) {
+                    is ScreenElem.Title -> {
+                        TitleCard(
+                            title = item.title,
+                            points = if (item.counter) 0 else null,
+                            titleStyle = if (item.largeTitle) MaterialTheme.typography.headlineLarge else null
+                        )
+                    }
+                    is ScreenElem.TextField -> {
+                        val value by viewModel.state.getString(item.type)
+                        OutlinedTextField(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(MaterialTheme.padding.inRow),
+                            value = value,
+                            onValueChange = { viewModel.state.setString(item.type, it) },
+                            label = {
+                                Text(
+                                    text = item.label,
+                                )
+                            },
+                            keyboardOptions = KeyboardOptions(autoCorrect = false),
+                            textStyle = MaterialTheme.typography.titleLarge,
+                            labelBodySmall = MaterialTheme.typography.titleMedium,
+                        )
+                    }
+                    is ScreenElem.AllianceButtons -> {
+                        val activeIndex by viewModel.state.getInt(item.type)
+                        AllianceButtons(
+                            modifier = Modifier
+                                .padding(all = 16.dp),
+                            activeIndex = activeIndex,
+                            onItemClick = { index ->
+                                viewModel.state.setInt(
+                                    item.type,
+                                    value = if (activeIndex == index)
+                                        0
+                                    else index
+                                )
+                            },
+                            redText= item.text1,
+                            blueText= item.text2,
+                        )
+                    }
+                    is ScreenElem.Switch -> {
+                        val checked by viewModel.state.getBoolean(item.type)
+                        TextSwitch(
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp)
+                                .padding(top = 8.dp),
+                            checked = checked,
+                            onCheckedChange = { viewModel.state.setBoolean(item.type, it) },
+                            text = item.label
+                        )
+                    }
+                    is ScreenElem.Counter -> {
+                        val counter by viewModel.state.getInt(item.type)
+                        TextCounter(
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp)
+                                .padding(top = 8.dp),
+                            counter = counter,
+                            text = item.label,
+                            onClickPlus = { viewModel.state.setInt(item.type, counter + 1) },
+                            onClickMinus = { viewModel.state.setInt(item.type, counter - 1) },
+                            plusEnabled = counter < 10,
+                            minusEnabled = counter > 0
+                        )
+                    }
+                    is ScreenElem.SegmentedButton -> {
+                        val selectedIndex by viewModel.state.getInt(item.type)
+                        TextButtons(
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp)
+                                .padding(top = 8.dp),
+                            items = item.buttons,
+                            label = item.label,
+                            selectedIndex = selectedIndex,
+                            onItemClick = { index ->
+                                viewModel.state.setInt(
+                                    item.type,
+                                    value = if (index + 1 == selectedIndex) 0 else index + 1
+                                )
+                            },
+                        )
+                    }
+                }
             }
         }
     }

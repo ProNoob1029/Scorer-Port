@@ -97,7 +97,6 @@ internal fun Measurements (
         {
             Row {
                 Text(
-                    modifier = Modifier.width(IntrinsicSize.Min),
                     text = text,
                     style = textStyle
                 )

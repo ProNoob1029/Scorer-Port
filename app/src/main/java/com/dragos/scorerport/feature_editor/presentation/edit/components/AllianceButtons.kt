@@ -18,9 +18,9 @@ import com.dragos.scorerport.feature_editor.presentation.util.MeasureView
 fun AllianceButtons(
     modifier: Modifier = Modifier,
     fontStyle: TextStyle = MaterialTheme.typography.headlineSmall,
-    redText: String = "Red Alliance",
-    blueText: String = "Blue Alliance",
-    activeIndex: Int?,
+    redText: String,
+    blueText: String,
+    activeIndex: Int = 0,
     onItemClick: (index: Int) -> Unit,
 ) {
     MeasureView(
