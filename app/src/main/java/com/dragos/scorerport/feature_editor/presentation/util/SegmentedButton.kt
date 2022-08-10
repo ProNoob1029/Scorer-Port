@@ -153,7 +153,8 @@ internal fun SegmetedButtonComponents (
                 onItemClick(index)
                       },
             contentPadding = PaddingValues(
-                horizontal = 4.dp
+                horizontal = 8.dp,
+                vertical = 4.dp
             ),
             enabled = enabled,
         ) {

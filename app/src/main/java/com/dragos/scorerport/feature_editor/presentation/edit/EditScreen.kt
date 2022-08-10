@@ -1,5 +1,6 @@
 package com.dragos.scorerport.feature_editor.presentation.edit
 
+import androidx.compose.animation.*
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -122,17 +123,17 @@ fun EditScreen(
             }*/
 
             items(
-                items = screen
+                items = viewModel.screen.elements
             ) { item ->
                 when(item) {
-                    is ScreenElem.Title -> {
+                    is Title -> {
                         TitleCard(
                             title = item.title,
                             points = if (item.counter) 0 else null,
                             titleStyle = if (item.largeTitle) MaterialTheme.typography.headlineLarge else null
                         )
                     }
-                    is ScreenElem.TextField -> {
+                    is TextField -> {
                         val value by viewModel.state.getString(item.type)
                         OutlinedTextField(
                             modifier = Modifier
@@ -150,7 +151,7 @@ fun EditScreen(
                             labelBodySmall = MaterialTheme.typography.titleMedium,
                         )
                     }
-                    is ScreenElem.AllianceButtons -> {
+                    is AllianceButtons -> {
                         val activeIndex by viewModel.state.getInt(item.type)
                         AllianceButtons(
                             modifier = Modifier
@@ -168,18 +169,27 @@ fun EditScreen(
                             blueText= item.text2,
                         )
                     }
-                    is ScreenElem.Switch -> {
+                    is Switch -> {
                         val checked by viewModel.state.getBoolean(item.type)
-                        TextSwitch(
-                            modifier = Modifier
-                                .padding(horizontal = 16.dp)
-                                .padding(top = 8.dp),
-                            checked = checked,
-                            onCheckedChange = { viewModel.state.setBoolean(item.type, it) },
-                            text = item.label
-                        )
+
+                        val visible by viewModel.state.getVisibility(item.type)
+
+                        AnimatedVisibility(
+                            visible = visible,
+                            enter = fadeIn() + slideInVertically(),
+                            exit = fadeOut() + slideOutVertically()
+                        ) {
+                            TextSwitch(
+                                modifier = Modifier
+                                    .padding(horizontal = 16.dp)
+                                    .padding(top = 8.dp),
+                                checked = checked,
+                                onCheckedChange = { viewModel.state.setBoolean(item.type, it) },
+                                text = item.label
+                            )
+                        }
                     }
-                    is ScreenElem.Counter -> {
+                    is Counter -> {
                         val counter by viewModel.state.getInt(item.type)
                         TextCounter(
                             modifier = Modifier
@@ -193,7 +203,7 @@ fun EditScreen(
                             minusEnabled = counter > 0
                         )
                     }
-                    is ScreenElem.SegmentedButton -> {
+                    is SegmentedButton -> {
                         val selectedIndex by viewModel.state.getInt(item.type)
                         TextButtons(
                             modifier = Modifier

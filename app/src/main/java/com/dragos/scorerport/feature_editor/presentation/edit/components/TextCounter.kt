@@ -98,7 +98,8 @@ internal fun Measurements (
             Row {
                 Text(
                     text = text,
-                    style = textStyle
+                    style = textStyle,
+                    modifier = Modifier.width(IntrinsicSize.Min)
                 )
                 CounterAndButtons(
                     counter = counter,

@@ -1,8 +1,6 @@
 package com.dragos.scorerport.feature_editor.presentation.edit.components
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -96,7 +94,7 @@ internal fun Measurements(
     MeasureView(
         modifier = modifier,
         viewToMeasure = listOf(
-            { Text(text = label, style = textStyle) },
+            { Text(text = label, style = textStyle, modifier = Modifier.width(IntrinsicSize.Min)) },
             { SegmentedButton(items = items) },
             { SegmentedButton(items = items, vertical = true) }
         )

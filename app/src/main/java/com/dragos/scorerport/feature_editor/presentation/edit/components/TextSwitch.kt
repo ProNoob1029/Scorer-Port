@@ -1,8 +1,6 @@
 package com.dragos.scorerport.feature_editor.presentation.edit.components
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -72,7 +70,7 @@ internal fun MeasureTextSwitch (
         viewToMeasure =
         {
             Row {
-                Text(text = text, style = textStyle)
+                Text(text = text, style = textStyle, modifier = Modifier.width(IntrinsicSize.Min))
                 Switch(checked = checked, onCheckedChange = onCheckedChange)
             }
         }
