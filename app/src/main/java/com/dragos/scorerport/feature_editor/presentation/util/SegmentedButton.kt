@@ -35,11 +35,14 @@ fun SegmentedButton(
     if (!vertical) {
         Row(
             modifier = modifier
+                .widthIn(min = 200.dp)
+                .width(IntrinsicSize.Min)
                 .height(IntrinsicSize.Max)
-                .width(IntrinsicSize.Max)
         ) {
             SegmetedButtonComponents(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight(),
                 items = items,
                 selectedIndex = selectedIndex,
                 onItemClick = onItemClick,
@@ -114,10 +117,6 @@ internal fun SegmetedButtonComponents (
             bottomStartPercent = 0,
             bottomEndPercent = 50
         )
-    val newModifier = if (vertical)
-        modifier.fillMaxWidth()
-    else
-        modifier.fillMaxHeight()
     val textModifier = if (vertical)
         Modifier.width(IntrinsicSize.Min)
     else
@@ -134,7 +133,7 @@ internal fun SegmetedButtonComponents (
             if (selected) contentColorFor(backgroundColor = color) else MaterialTheme.colorScheme.onSurface,
         )
         OutlinedButton(
-            modifier = newModifier,
+            modifier = modifier,
             shape = when (index) {
                 0 -> startShape
                 items.size - 1 -> endShape

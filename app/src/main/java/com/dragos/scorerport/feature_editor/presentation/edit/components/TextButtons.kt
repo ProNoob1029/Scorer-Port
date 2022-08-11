@@ -25,15 +25,15 @@ fun TextButtons (
         items = items,
         label = label,
         textStyle = textStyle
-    ) { inColumn, compactButton ->
-        if (inColumn) {
+    ) { compact ->
+        if (compact) {
             Column(modifier = Modifier.fillMaxWidth()) {
                 TextButtonsComponents(
                     items = items,
                     label = label,
                     selectedIndex = selected,
                     onItemClick = onItemClick,
-                    compactButton = compactButton,
+                    compactButton = false,
                     modifier = Modifier.align(Alignment.Start),
                     buttonModifier = Modifier.align(Alignment.End),
                     textStyle = textStyle
@@ -49,7 +49,7 @@ fun TextButtons (
                     label = label,
                     selectedIndex = selected,
                     onItemClick = onItemClick,
-                    compactButton = compactButton,
+                    compactButton = false,
                     modifier = Modifier.weight(1f),
                     textStyle = textStyle
                 )
@@ -89,28 +89,18 @@ internal fun Measurements(
     items: List<String>,
     label: String,
     textStyle: TextStyle,
-    content: @Composable (inColumn: Boolean, compactButton: Boolean) -> Unit
+    content: @Composable (compact: Boolean) -> Unit
 ) {
     MeasureView(
         modifier = modifier,
-        viewToMeasure = listOf(
-            { Text(text = label, style = textStyle, modifier = Modifier.width(IntrinsicSize.Min)) },
-            { SegmentedButton(items = items) },
-            { SegmentedButton(items = items, vertical = true) }
-        )
-    ) { maxWidth, measuredWidths, _ ->
-        val textWidth = measuredWidths[0]
-        val buttonWidth = measuredWidths[1]
-        val compactButtonWidth = measuredWidths[2]
-        when {
-            maxWidth >= textWidth + buttonWidth ->
-                content(inColumn = false, compactButton = false)
-            maxWidth >= buttonWidth ->
-                content(inColumn = true, compactButton = false)
-            maxWidth >= textWidth + compactButtonWidth ->
-                content(inColumn = false, compactButton = true)
-            else ->
-                content(inColumn = true, compactButton = true)
+        viewToMeasure = {
+            Row {
+                Text(text = label, style = textStyle, modifier = Modifier.width(IntrinsicSize.Min))
+                SegmentedButton(items = items)
+            }
         }
+    ) { maxWidth, measuredWidths, _ ->
+        val compact = maxWidth < measuredWidths
+        content(compact)
     }
 }

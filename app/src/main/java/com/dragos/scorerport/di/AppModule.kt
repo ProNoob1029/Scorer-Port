@@ -2,17 +2,17 @@ package com.dragos.scorerport.di
 
 import android.app.Application
 import com.dragos.scorerport.ScorerApp
-import com.dragos.scorerport.feature_editor.MatchModel
-import com.dragos.scorerport.feature_editor.MatchScreen
-import com.dragos.scorerport.feature_editor.MatchState
 import com.dragos.scorerport.feature_editor.data.data_source.FirebaseDatabase
 import com.dragos.scorerport.feature_editor.data.repository.TestRepositoryImpl
-import com.dragos.scorerport.feature_editor.domain.model.ItemState
 import com.dragos.scorerport.feature_editor.domain.repository.ListRepository
 import com.dragos.scorerport.feature_editor.domain.use_case.ChangeListLocation
 import com.dragos.scorerport.feature_editor.domain.use_case.GetList
 import com.dragos.scorerport.feature_editor.domain.use_case.ListUseCases
-import com.dragos.scorerport.feature_editor.presentation.edit.Screen
+import com.dragos.scorerport.impl.freightfrenzy.MatchModel
+import com.dragos.scorerport.impl.freightfrenzy.MatchScreen
+import com.dragos.scorerport.impl.freightfrenzy.MatchState
+import com.dragos.scorerport.impl.models.ItemState
+import com.dragos.scorerport.impl.models.Screen
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

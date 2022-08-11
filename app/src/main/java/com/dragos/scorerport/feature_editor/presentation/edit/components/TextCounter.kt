@@ -42,19 +42,15 @@ fun TextCounter (
                     text = text,
                     style = textStyle
                 )
-                Row(
+                CounterAndButtons(
                     modifier = Modifier.align(Alignment.End),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    CounterAndButtons(
-                        counter = counter,
-                        textStyle = textStyle,
-                        plusEnabled = plusEnabled,
-                        minusEnabled = minusEnabled,
-                        onClickMinus = onClickMinus,
-                        onClickPlus = onClickPlus
-                    )
-                }
+                    counter = counter,
+                    textStyle = textStyle,
+                    plusEnabled = plusEnabled,
+                    minusEnabled = minusEnabled,
+                    onClickMinus = onClickMinus,
+                    onClickPlus = onClickPlus
+                )
             }
         } else {
             Row(
@@ -119,6 +115,7 @@ internal fun Measurements (
 
 @Composable
 internal fun CounterAndButtons (
+    modifier: Modifier = Modifier,
     counter: Int,
     textStyle: TextStyle,
     plusEnabled: Boolean,
@@ -126,17 +123,28 @@ internal fun CounterAndButtons (
     onClickMinus: () -> Unit,
     onClickPlus: () -> Unit
 ) {
-    Counter(
-        modifier = Modifier.padding(horizontal = 16.dp),
-        counter = counter,
-        textStyle = textStyle
-    )
-    Buttons(
-        onClickMinus = onClickMinus,
-        onClickPlus = onClickPlus,
-        plusEnabled = plusEnabled,
-        minusEnabled = minusEnabled
-    )
+    Row(
+        modifier = modifier.widthIn(max = 200.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier.weight(1f),
+            contentAlignment = Alignment.Center
+        ) {
+            Counter(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                counter = counter,
+                textStyle = textStyle
+            )
+        }
+        Buttons(
+            modifier = Modifier.weight(1f),
+            onClickMinus = onClickMinus,
+            onClickPlus = onClickPlus,
+            plusEnabled = plusEnabled,
+            minusEnabled = minusEnabled
+        )
+    }
 }
 
 @Composable
@@ -163,7 +171,10 @@ internal fun Buttons (
 ) {
     val minus = painterResource(id = R.drawable.ic_baseline_minus_24)
     val view = LocalView.current
-    Row(modifier = modifier) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
         FilledIconButton(
             modifier = Modifier.size(50.dp),
             onClick = {
@@ -174,7 +185,11 @@ internal fun Buttons (
         ) {
             Icon(minus , contentDescription = "Minus")
         }
-        Spacer(modifier = Modifier.width(8.dp))
+    }
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
         FilledIconButton(
             modifier = Modifier.size(50.dp),
             onClick = {
