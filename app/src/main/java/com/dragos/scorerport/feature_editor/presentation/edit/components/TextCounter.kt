@@ -124,7 +124,7 @@ internal fun CounterAndButtons (
     onClickPlus: () -> Unit
 ) {
     Row(
-        modifier = modifier.widthIn(max = 200.dp),
+        modifier = modifier.width(IntrinsicSize.Min).widthIn(min = 200.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
@@ -132,7 +132,7 @@ internal fun CounterAndButtons (
             contentAlignment = Alignment.Center
         ) {
             Counter(
-                modifier = Modifier.padding(horizontal = 16.dp),
+                modifier = Modifier.padding(horizontal = 10.dp),
                 counter = counter,
                 textStyle = textStyle
             )

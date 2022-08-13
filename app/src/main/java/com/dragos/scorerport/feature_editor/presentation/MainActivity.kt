@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.dragos.scorerport.ScorerApp
 import com.dragos.scorerport.feature_editor.presentation.edit.EditScreen
-import com.dragos.scorerport.feature_editor.presentation.list.ListScreen
 import com.dragos.scorerport.ui.theme.ScorerPortTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -22,6 +21,7 @@ class MainActivity: ComponentActivity() {
             ScorerPortTheme(dynamicColor = scorerApp.dynamicColorEnabled) {
                 //ListScreen()
                 EditScreen()
+                //EditorScreen()
             }
         }
     }

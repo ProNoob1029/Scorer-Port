@@ -12,6 +12,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -38,7 +39,9 @@ fun EditScreen(
             ) { item ->
                 when(item) {
                     is ScreenElements.Title -> {
-                        val value by viewModel.getState(item.type)
+                        //val value by viewModel.getState(item.type)
+                        //val value = 0
+                        val value by rememberSaveable { viewModel.getState(item.type) }
 
                         TitleCard(
                             modifier = if (item.largeTitle) Modifier else Modifier.padding(top = 8.dp),
@@ -48,7 +51,9 @@ fun EditScreen(
                         )
                     }
                     is ScreenElements.TextField -> {
-                        val value by viewModel.getState(item.type)
+                        //val value by viewModel.getState(item.type)
+                        //val value = ""
+                        val value by rememberSaveable { viewModel.getState(item.type) }
                         OutlinedTextField(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -66,7 +71,9 @@ fun EditScreen(
                         )
                     }
                     is ScreenElements.AllianceButtons -> {
-                        val activeIndex by viewModel.getState(item.type)
+                        //val activeIndex by viewModel.getState(item.type)
+                        //val activeIndex = 0
+                        val activeIndex by rememberSaveable { viewModel.getState(item.type) }
                         AllianceButtons(
                             modifier = Modifier
                                 .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp),
@@ -84,9 +91,13 @@ fun EditScreen(
                         )
                     }
                     is ScreenElements.Switch -> {
-                        val checked by viewModel.getState(item.type)
+                        //val checked by viewModel.getState(item.type)
+                        //val checked = false
+                        val checked by rememberSaveable { viewModel.getState(item.type) }
 
-                        val visible by viewModel.getVisibility(item.type)
+                        //val visible by viewModel.getVisibility(item.type)
+                        //val visible = true
+                        val visible by rememberSaveable { viewModel.getVisibility(item.type) }
 
                         AnimatedVisibility(
                             visible = visible,
@@ -104,7 +115,9 @@ fun EditScreen(
                         }
                     }
                     is ScreenElements.Counter -> {
-                        val counter by viewModel.getState(item.type)
+                        //val counter by viewModel.getState(item.type)
+                        //val counter = 0
+                        val counter by rememberSaveable { viewModel.getState(item.type) }
                         TextCounter(
                             modifier = Modifier
                                 .padding(horizontal = 16.dp)
@@ -118,7 +131,9 @@ fun EditScreen(
                         )
                     }
                     is ScreenElements.SegmentedButton -> {
-                        val selectedIndex by viewModel.getState(item.type)
+                        //val selectedIndex by viewModel.getState(item.type)
+                        //val selectedIndex = 0
+                        val selectedIndex by rememberSaveable { viewModel.getState(item.type) }
                         TextButtons(
                             modifier = Modifier
                                 .padding(horizontal = 16.dp)

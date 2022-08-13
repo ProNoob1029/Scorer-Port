@@ -145,7 +145,11 @@ class MatchState(matchModel: MatchModel): ItemState {
 
     override fun set(item: ItemEnum.Counters, add: Int) {
         when (item) {
-            MatchEnum.Counters.AutoStorage -> autoStorage.value += add
+            MatchEnum.Counters.AutoStorage -> {
+                autoStorage.value += add
+                if (driverStorage.value + add >= 0)
+                    driverStorage.value += add
+            }
             MatchEnum.Counters.AutoHubL1 -> {
                 autoHub1.value += add
                 if(driverHub1.value + add >= 0)

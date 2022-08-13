@@ -1,5 +1,6 @@
 package com.dragos.scorerport.feature_editor.presentation.edit.components
 
+import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
@@ -7,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
 import com.dragos.scorerport.feature_editor.presentation.util.MeasureView
 
@@ -18,6 +20,7 @@ fun TextSwitch (
     text: String,
     textStyle: TextStyle = MaterialTheme.typography.titleLarge
 ) {
+    val view = LocalView.current
     MeasureTextSwitch(
         modifier = modifier,
         checked = checked,
@@ -34,7 +37,10 @@ fun TextSwitch (
                 Switch(
                     modifier = Modifier.align(Alignment.End),
                     checked = checked,
-                    onCheckedChange = onCheckedChange
+                    onCheckedChange = {
+                        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                        onCheckedChange(it)
+                    }
                 )
             }
         } else {
@@ -49,7 +55,10 @@ fun TextSwitch (
                 )
                 Switch(
                     checked = checked,
-                    onCheckedChange = onCheckedChange
+                    onCheckedChange = {
+                        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                        onCheckedChange(it)
+                    }
                 )
             }
         }
