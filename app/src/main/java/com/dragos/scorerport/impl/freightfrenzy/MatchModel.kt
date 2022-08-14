@@ -1,5 +1,7 @@
 package com.dragos.scorerport.impl.freightfrenzy
 
+import com.dragos.scorerport.impl.models.ItemModel
+
 data class MatchModel(
     val title: String = "",
     val alliance: Int = 0,
@@ -8,9 +10,12 @@ data class MatchModel(
     val autoHub1: Int = 0,
     val autoHub2: Int = 0,
     val autoHub3: Int = 0,
-    val autoFreightBonus: Int = 0,
-    val autoParked: Int = 0,
-    val autoFullyParked: Boolean = false,
+    val autoFreightBonus1: Int = 0,
+    val autoFreightBonus2: Int = 0,
+    val autoParked1: Int = 0,
+    val autoParked2: Int = 0,
+    val autoFullyParked1: Boolean = false,
+    val autoFullyParked2: Boolean = false,
     val driverStorage: Int = 0,
     val driverHub1: Int = 0,
     val driverHub2: Int = 0,
@@ -20,5 +25,6 @@ data class MatchModel(
     val endBalanced: Boolean = false,
     val endLeaning: Boolean = false,
     val endParked: Int = 0,
-    val endCapping: Int = 0
-)
+    val endCapping: Int = 0,
+    val team2: Boolean = false
+): ItemModel

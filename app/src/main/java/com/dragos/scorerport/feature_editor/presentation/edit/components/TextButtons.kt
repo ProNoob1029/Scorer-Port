@@ -6,6 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import com.dragos.scorerport.feature_editor.presentation.util.MeasureView
 import com.dragos.scorerport.feature_editor.presentation.util.SegmentedButton
@@ -17,7 +18,8 @@ fun TextButtons (
     label: String,
     selectedIndex: Int,
     onItemClick: (index: Int) -> Unit,
-    textStyle: TextStyle = MaterialTheme.typography.titleLarge
+    textStyle: TextStyle = MaterialTheme.typography.titleLarge,
+    color: Color = MaterialTheme.colorScheme.primary
 ) {
     val selected: Int? = if (selectedIndex > 0) selectedIndex - 1 else null
     Measurements(
@@ -36,7 +38,8 @@ fun TextButtons (
                     compactButton = false,
                     modifier = Modifier.align(Alignment.Start),
                     buttonModifier = Modifier.align(Alignment.End),
-                    textStyle = textStyle
+                    textStyle = textStyle,
+                    color = color
                 )
             }
         } else {
@@ -51,7 +54,8 @@ fun TextButtons (
                     onItemClick = onItemClick,
                     compactButton = false,
                     modifier = Modifier.weight(1f),
-                    textStyle = textStyle
+                    textStyle = textStyle,
+                    color = color
                 )
             }
         }
@@ -67,7 +71,8 @@ fun TextButtonsComponents(
     compactButton: Boolean,
     modifier: Modifier = Modifier,
     buttonModifier: Modifier = Modifier,
-    textStyle: TextStyle
+    textStyle: TextStyle,
+    color: Color
 ) {
     Text(
         modifier = modifier,
@@ -80,6 +85,7 @@ fun TextButtonsComponents(
         selectedIndex = selectedIndex,
         onItemClick = onItemClick,
         vertical = compactButton,
+        color = color
     )
 }
 

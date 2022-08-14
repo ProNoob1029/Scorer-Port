@@ -1,6 +1,5 @@
 package com.dragos.scorerport.feature_editor.presentation.edit.components
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -22,6 +21,7 @@ fun TitleCard (
     points: Int? = null,
     surfaceColor: Color = MaterialTheme.colorScheme.primaryContainer,
     titleStyle: TextStyle? = MaterialTheme.typography.headlineMedium,
+    content: @Composable () -> Unit = {}
 ) {
     val style: TextStyle = titleStyle ?: MaterialTheme.typography.headlineMedium
 
@@ -68,13 +68,14 @@ fun TitleCard (
                 }
             }
         } else {
-            Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+            Row(modifier = Modifier.padding(horizontal = 16.dp)) {
                 Text(
                     text = title,
                     textAlign = TextAlign.Center,
                     style = style,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.weight(1f),
                 )
+                content()
             }
         }
     }

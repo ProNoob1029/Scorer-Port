@@ -13,5 +13,11 @@ interface ItemState {
     fun set(item: ItemEnum.Ints, value: Int)
     fun set(item: ItemEnum.Counters, add: Int)
 
+    fun set(item: ItemModel)
+
     fun getVisibility(item: ItemEnum): State<Boolean>
+
+    fun getAnimatedVisibility(item: ItemEnum): State<Boolean>
+
+    fun specialColor(item: ItemEnum): Boolean
 }

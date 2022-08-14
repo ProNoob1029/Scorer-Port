@@ -25,4 +25,8 @@ class EditViewModel @Inject constructor(
     fun setState(item: ItemEnum.Counters, add: Int) = state.set(item, add)
 
     fun getVisibility(item: ItemEnum) = state.getVisibility(item)
+
+    fun getAnimatedVisibility(item: ItemEnum) = state.getAnimatedVisibility(item)
+
+    fun specialColor(item: ItemEnum) = state.specialColor(item)
 }

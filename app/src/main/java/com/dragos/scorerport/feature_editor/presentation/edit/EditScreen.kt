@@ -6,15 +6,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dragos.scorerport.feature_editor.presentation.edit.components.*
@@ -38,16 +36,48 @@ fun EditScreen(
                 items = viewModel.screen.elements
             ) { item ->
                 when(item) {
+                    is ScreenElements.Header -> {
+                        val value by rememberSaveable { viewModel.getState(item.type) }
+
+                        val containerColor by animateColorAsState(
+                            targetValue = if (value)
+                                MaterialTheme.colorScheme.tertiaryContainer
+                            else Color.Transparent
+                        )
+
+                        val contentColor by animateColorAsState(
+                            targetValue = if (value)
+                                contentColorFor(backgroundColor = MaterialTheme.colorScheme.tertiaryContainer)
+                            else contentColorFor(backgroundColor = MaterialTheme.colorScheme.primaryContainer)
+                        )
+
+                        TitleCard(
+                            title = item.title,
+                            titleStyle = MaterialTheme.typography.headlineLarge
+                        ) {
+                            OutlinedButton(
+                                onClick = { viewModel.setState(item.type, !value) },
+                                colors = ButtonDefaults.outlinedButtonColors(
+                                    containerColor = containerColor,
+                                    contentColor = contentColor
+                                )
+                            ) {
+                                Text(
+                                    text = if (value) item.title2 else item.title1
+                                )
+                            }
+                        }
+                    }
                     is ScreenElements.Title -> {
                         //val value by viewModel.getState(item.type)
                         //val value = 0
                         val value by rememberSaveable { viewModel.getState(item.type) }
 
                         TitleCard(
-                            modifier = if (item.largeTitle) Modifier else Modifier.padding(top = 8.dp),
+                            modifier = Modifier.padding(top = 8.dp),
                             title = item.title,
                             points = if (item.counter) value else null,
-                            titleStyle = if (item.largeTitle) MaterialTheme.typography.headlineLarge else null
+                            titleStyle = null
                         )
                     }
                     is ScreenElements.TextField -> {
@@ -95,23 +125,25 @@ fun EditScreen(
                         //val checked = false
                         val checked by rememberSaveable { viewModel.getState(item.type) }
 
-                        //val visible by viewModel.getVisibility(item.type)
-                        //val visible = true
                         val visible by rememberSaveable { viewModel.getVisibility(item.type) }
 
-                        AnimatedVisibility(
-                            visible = visible,
-                            enter = fadeIn() + slideInVertically(),
-                            exit = fadeOut() + slideOutVertically()
-                        ) {
-                            TextSwitch(
-                                modifier = Modifier
-                                    .padding(horizontal = 16.dp)
-                                    .padding(top = 8.dp),
-                                checked = checked,
-                                onCheckedChange = { viewModel.setState(item.type, it) },
-                                text = item.label
-                            )
+                        val animatedVisible by rememberSaveable { viewModel.getAnimatedVisibility(item.type) }
+
+                        if (visible) {
+                            AnimatedVisibility(
+                                visible = animatedVisible,
+                                enter = fadeIn() + slideInVertically(),
+                                exit = fadeOut() + slideOutVertically()
+                            ) {
+                                TextSwitch(
+                                    modifier = Modifier
+                                        .padding(horizontal = 16.dp)
+                                        .padding(top = 8.dp),
+                                    checked = checked,
+                                    onCheckedChange = { viewModel.setState(item.type, it) },
+                                    text = item.label
+                                )
+                            }
                         }
                     }
                     is ScreenElements.Counter -> {
@@ -134,20 +166,30 @@ fun EditScreen(
                         //val selectedIndex by viewModel.getState(item.type)
                         //val selectedIndex = 0
                         val selectedIndex by rememberSaveable { viewModel.getState(item.type) }
-                        TextButtons(
-                            modifier = Modifier
-                                .padding(horizontal = 16.dp)
-                                .padding(top = 8.dp),
-                            items = item.buttons,
-                            label = item.label,
-                            selectedIndex = selectedIndex,
-                            onItemClick = { index ->
-                                viewModel.setState(
-                                    item.type,
-                                    value = if (index + 1 == selectedIndex) 0 else index + 1
-                                )
-                            },
-                        )
+
+                        val visibility by rememberSaveable { viewModel.getVisibility(item.type) }
+
+                        val specialColor = rememberSaveable { viewModel.specialColor(item.type) }
+
+                        val color = if (specialColor) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary
+
+                        if (visibility) {
+                            TextButtons(
+                                modifier = Modifier
+                                    .padding(horizontal = 16.dp)
+                                    .padding(top = 8.dp),
+                                items = item.buttons,
+                                label = item.label,
+                                selectedIndex = selectedIndex,
+                                onItemClick = { index ->
+                                    viewModel.setState(
+                                        item.type,
+                                        value = if (index + 1 == selectedIndex) 0 else index + 1
+                                    )
+                                },
+                                color = color
+                            )
+                        }
                     }
                 }
             }

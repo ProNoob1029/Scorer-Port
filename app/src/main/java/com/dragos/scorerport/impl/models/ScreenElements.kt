@@ -4,8 +4,13 @@ sealed class ScreenElements {
     class Title(
         val type: ItemEnum.Ints,
         val title: String,
-        val counter: Boolean = false,
-        val largeTitle: Boolean = false
+        val counter: Boolean = false
+    ): ScreenElements()
+    class Header(
+        val type: ItemEnum.Booleans,
+        val title: String,
+        val title1: String,
+        val title2: String
     ): ScreenElements()
     class TextField(
         val type: ItemEnum.Strings,
