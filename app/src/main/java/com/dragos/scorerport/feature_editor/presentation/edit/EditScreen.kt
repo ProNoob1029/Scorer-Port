@@ -12,7 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dragos.scorerport.feature_editor.presentation.edit.components.*
@@ -25,41 +25,61 @@ import com.dragos.scorerport.ui.theme.padding
 fun EditScreen(
     viewModel: EditViewModel = hiltViewModel(),
 ) {
-    Scaffold { padding ->
+    val decayAnimationSpec = rememberSplineBasedDecay<Float>()
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
+        decayAnimationSpec,
+        rememberTopAppBarState()
+    )
+
+    Scaffold (
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            MediumTopAppBar (
+                navigationIcon = {},
+                title = {
+                    Text(
+                        text = viewModel.screen.title
+                    )
+                },
+                scrollBehavior = scrollBehavior
+            )
+        }
+            ) { padding ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(padding),
+                .padding(padding)
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             items(
                 items = viewModel.screen.elements
             ) { item ->
                 when(item) {
-                    is ScreenElements.Header -> {
+                    /*is ScreenElements.Header -> {
                         val value by rememberSaveable { viewModel.getState(item.type) }
 
                         val containerColor by animateColorAsState(
                             targetValue = if (value)
-                                MaterialTheme.colorScheme.tertiaryContainer
-                            else Color.Transparent
+                                MaterialTheme.colorScheme.tertiary
+                            else MaterialTheme.colorScheme.primary
                         )
 
                         val contentColor by animateColorAsState(
                             targetValue = if (value)
-                                contentColorFor(backgroundColor = MaterialTheme.colorScheme.tertiaryContainer)
-                            else contentColorFor(backgroundColor = MaterialTheme.colorScheme.primaryContainer)
+                                contentColorFor(backgroundColor = MaterialTheme.colorScheme.tertiary)
+                            else contentColorFor(backgroundColor = MaterialTheme.colorScheme.primary)
                         )
 
                         TitleCard(
                             title = item.title,
                             titleStyle = MaterialTheme.typography.headlineLarge
                         ) {
-                            OutlinedButton(
+                            Button(
                                 onClick = { viewModel.setState(item.type, !value) },
-                                colors = ButtonDefaults.outlinedButtonColors(
+                                colors = ButtonDefaults.buttonColors(
                                     containerColor = containerColor,
-                                    contentColor = contentColor
+                                    contentColor = contentColor,
                                 )
                             ) {
                                 Text(
@@ -67,7 +87,7 @@ fun EditScreen(
                                 )
                             }
                         }
-                    }
+                    }*/
                     is ScreenElements.Title -> {
                         //val value by viewModel.getState(item.type)
                         //val value = 0
@@ -129,6 +149,17 @@ fun EditScreen(
 
                         val animatedVisible by rememberSaveable { viewModel.getAnimatedVisibility(item.type) }
 
+                        val specialColor = rememberSaveable { viewModel.specialColor(item.type) }
+
+                        val colors = if (specialColor)
+                            SwitchDefaults.colors(
+                                checkedThumbColor = MaterialTheme.colorScheme.onTertiary,
+                                checkedTrackColor = MaterialTheme.colorScheme.tertiary,
+                                checkedBorderColor = MaterialTheme.colorScheme.tertiary
+                            )
+                        else
+                            SwitchDefaults.colors()
+
                         if (visible) {
                             AnimatedVisibility(
                                 visible = animatedVisible,
@@ -141,7 +172,8 @@ fun EditScreen(
                                         .padding(top = 8.dp),
                                     checked = checked,
                                     onCheckedChange = { viewModel.setState(item.type, it) },
-                                    text = item.label
+                                    text = item.label,
+                                    colors = colors,
                                 )
                             }
                         }

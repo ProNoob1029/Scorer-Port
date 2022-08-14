@@ -24,7 +24,8 @@ data class MatchModel(
     val endDucks: Int = 0,
     val endBalanced: Boolean = false,
     val endLeaning: Boolean = false,
-    val endParked: Int = 0,
+    val endParked1: Int = 0,
+    val endParked2: Int = 0,
     val endCapping: Int = 0,
     val team2: Boolean = false
 ): ItemModel

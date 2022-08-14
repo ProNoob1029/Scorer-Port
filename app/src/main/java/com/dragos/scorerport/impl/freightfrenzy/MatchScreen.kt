@@ -5,7 +5,6 @@ import com.dragos.scorerport.impl.models.ScreenElements
 
 class MatchScreen: Screen {
     override val elements = listOf(
-        ScreenElements.Header(MatchEnum.Booleans.Title, "New Match", "1 Team", "2 Teams"),
         ScreenElements.TextField(MatchEnum.Strings.TitleText, "Title"),
         ScreenElements.AllianceButtons(MatchEnum.Ints.Alliance, "Red Alliance", "Blue Alliance"),
         ScreenElements.Title(MatchEnum.Ints.AutoTitle, "Autonomous: ", true),
@@ -35,6 +34,12 @@ class MatchScreen: Screen {
         ScreenElements.Counter(MatchEnum.Counters.EndDucks, "Carousel ducks: "),
         ScreenElements.SegmentedButton(MatchEnum.Ints.EndCapping, "Capping: ", listOf("Single", "Double")),
         ScreenElements.SegmentedButton(MatchEnum.Ints.EndParked, "Parked: ", listOf("Partially","Fully")),
+        ScreenElements.SegmentedButton(MatchEnum.Ints.EndParked1, "Parked 1: ", listOf("Partially","Fully")),
+        ScreenElements.SegmentedButton(MatchEnum.Ints.EndParked2, "Parked 2: ", listOf("Partially","Fully")),
         ScreenElements.Title(MatchEnum.Ints.TotalTitle, "Total: ", true)
     )
+    override val title = "New Match"
+    override val title1 = "1 Team"
+    override val title2 = "2 Teams"
+    override val titleType = MatchEnum.Booleans.Title
 }

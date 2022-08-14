@@ -29,7 +29,8 @@ class MatchState(matchModel: MatchModel = MatchModel()): ItemState {
     private val endDucks = mutableStateOf(matchModel.endDucks)
     private val endBalanced = mutableStateOf(matchModel.endBalanced)
     private val endLeaning = mutableStateOf(matchModel.endLeaning)
-    private val endParked = mutableStateOf(matchModel.endParked)
+    private val endParked1 = mutableStateOf(matchModel.endParked1)
+    private val endParked2 = mutableStateOf(matchModel.endParked2)
     private val endCapping = mutableStateOf(matchModel.endCapping)
 
     private val team2 = mutableStateOf(matchModel.team2)
@@ -59,7 +60,7 @@ class MatchState(matchModel: MatchModel = MatchModel()): ItemState {
         autoPoints.value =
         autoDuck.value.toInt() * 10 +
                 autoFreightBonus1.value * 10 +
-                autoFreightBonus2.value * 10 +
+                autoFreightBonus2.value * 10 * team2.value.toInt() +
                 autoStorage.value * 2 + autoHub * 6 +
                 when(autoParked1.value) {
                     1 -> 3
@@ -70,7 +71,7 @@ class MatchState(matchModel: MatchModel = MatchModel()): ItemState {
                     1 -> 3
                     2 -> 5
                     else -> 0
-                } * (autoFullyParked2.value.toInt() + 1)
+                } * (autoFullyParked2.value.toInt() + 1) * team2.value.toInt()
     }
     private fun calculateDriverPoints() {
         driverPoints.value =
@@ -86,7 +87,8 @@ class MatchState(matchModel: MatchModel = MatchModel()): ItemState {
             endBalanced.value.toInt() * 10 +
             endLeaning.value.toInt() * 20 +
             endCapping.value * 15 +
-            endParked.value * 3
+            endParked1.value * 3 +
+            endParked2.value * 3 * team2.value.toInt()
     }
     private fun calculateTotal() {
         totalPoints.value = autoPoints.value + driverPoints.value + endPoints.value
@@ -121,7 +123,9 @@ class MatchState(matchModel: MatchModel = MatchModel()): ItemState {
             MatchEnum.Ints.AutoParked -> autoParked1
             MatchEnum.Ints.AutoParked1 -> autoParked1
             MatchEnum.Ints.AutoParked2 -> autoParked2
-            MatchEnum.Ints.EndParked -> endParked
+            MatchEnum.Ints.EndParked -> endParked1
+            MatchEnum.Ints.EndParked1 -> endParked1
+            MatchEnum.Ints.EndParked2 -> endParked2
             MatchEnum.Ints.EndCapping -> endCapping
             MatchEnum.Ints.AutoTitle -> autoPoints
             MatchEnum.Ints.DriverTitle -> driverPoints
@@ -183,12 +187,8 @@ class MatchState(matchModel: MatchModel = MatchModel()): ItemState {
             MatchEnum.Booleans.Title -> {
                 team2.value = value
                 team1.value = !value
-                if (!value) {
-                    autoFreightBonus2.value = 0
-                    autoParked2.value = 0
-                    autoFullyParked2.value = false
-                    autoFullyParked2Visible.value = false
-                }
+                calculateAutoPoints()
+                calculateEndPoints()
             }
             else -> mutableStateOf(value)
         }
@@ -241,7 +241,15 @@ class MatchState(matchModel: MatchModel = MatchModel()): ItemState {
                 calculateAutoPoints()
             }
             MatchEnum.Ints.EndParked -> {
-                endParked.value = value
+                endParked1.value = value
+                calculateEndPoints()
+            }
+            MatchEnum.Ints.EndParked1 -> {
+                endParked1.value = value
+                calculateEndPoints()
+            }
+            MatchEnum.Ints.EndParked2 -> {
+                endParked2.value = value
                 calculateEndPoints()
             }
             MatchEnum.Ints.EndCapping -> {
@@ -337,7 +345,8 @@ class MatchState(matchModel: MatchModel = MatchModel()): ItemState {
             endDucks.value = item.endDucks
             endBalanced.value = item.endBalanced
             endLeaning.value = item.endLeaning
-            endParked.value = item.endParked
+            endParked1.value = item.endParked1
+            endParked2.value = item.endParked2
             endCapping.value = item.endCapping
             team2.value = item.team2
             team1.value = !item.team2
@@ -356,6 +365,9 @@ class MatchState(matchModel: MatchModel = MatchModel()): ItemState {
             MatchEnum.Ints.AutoParked -> team1
             MatchEnum.Ints.AutoParked1 -> team2
             MatchEnum.Ints.AutoParked2 -> team2
+            MatchEnum.Ints.EndParked -> team1
+            MatchEnum.Ints.EndParked1 -> team2
+            MatchEnum.Ints.EndParked2 -> team2
             else -> mutableStateOf(true)
         }
     }
@@ -374,6 +386,7 @@ class MatchState(matchModel: MatchModel = MatchModel()): ItemState {
             MatchEnum.Ints.AutoFreightBonus2 -> true
             MatchEnum.Ints.AutoParked2 -> true
             MatchEnum.Booleans.AutoFullyParked2 -> true
+            MatchEnum.Ints.EndParked2 -> true
             else -> false
         }
     }

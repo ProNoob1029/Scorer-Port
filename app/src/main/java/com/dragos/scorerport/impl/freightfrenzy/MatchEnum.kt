@@ -24,6 +24,8 @@ class MatchEnum: ItemEnum {
         AutoParked1,
         AutoParked2,
         EndParked,
+        EndParked1,
+        EndParked2,
         EndCapping,
         AutoTitle,
         DriverTitle,
