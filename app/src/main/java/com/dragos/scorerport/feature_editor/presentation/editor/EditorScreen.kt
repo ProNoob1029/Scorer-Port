@@ -12,19 +12,19 @@ import androidx.compose.ui.Modifier
 import com.dragos.scorerport.feature_editor.presentation.editor.componets.*
 import com.dragos.scorerport.impl.freightfrenzy.MatchEnum
 
+val screen: List<@Composable () -> Unit> = listOf(
+    { TextField(label = "Title", type = MatchEnum.Strings.TitleText) },
+    { AllianceButtons(firstText = "Red Alliance", secondText = "Blue Alliance", type = MatchEnum.Ints.Alliance) },
+    { Title(title = "Autonomous points: ", type = MatchEnum.Ints.AutoTitle) },
+    { TextSwitch(text = "Duck delivery: ", type = MatchEnum.Booleans.AutoDuck) },
+    { TextCounter(text = "Freight in storage: ", type = MatchEnum.Counters.AutoStorage) }
+)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditorScreen (
 
 ) {
-    val screen: List<@Composable () -> Unit> = listOf(
-        { TextField(label = "Title", type = MatchEnum.Strings.TitleText) },
-        { AllianceButtons(firstText = "Red Alliance", secondText = "Blue Alliance", type = MatchEnum.Ints.Alliance) },
-        { Title(title = "Autonomous points: ", type = MatchEnum.Ints.AutoTitle) },
-        { TextSwitch(text = "Duck delivery: ", type = MatchEnum.Booleans.AutoDuck) },
-        { TextCounter(text = "Freight in storage: ", type = MatchEnum.Counters.AutoStorage) }
-    )
-
     Scaffold { paddingValues ->
         LazyColumn (
             modifier = Modifier

@@ -17,27 +17,8 @@ class EditorViewModel @Inject constructor(
     fun get(type: MatchEnum.Booleans): State<Boolean> = state.get(type)
     fun get(type: MatchEnum.Counters): State<Int> = state.get(type)
 
-    fun set(type: MatchEnum.Strings, value: String) {
-        when(type) {
-            else -> state.set(type, value)
-        }
-    }
-
-    fun set(type: MatchEnum.Booleans, value: Boolean) {
-        when(type) {
-            else -> state.set(type, value)
-        }
-    }
-
-    fun set(type: MatchEnum.Ints, value: Int) {
-        when(type) {
-            else -> state.set(type, value)
-        }
-    }
-
-    fun set(type: MatchEnum.Counters, add: Int) {
-        when(type) {
-            else -> state.set(type, add)
-        }
-    }
+    fun set(type: MatchEnum.Strings, value: String) = state.set(type, value)
+    fun set(type: MatchEnum.Booleans, value: Boolean) = state.set(type, value)
+    fun set(type: MatchEnum.Ints, value: Int) = state.set(type, value)
+    fun set(type: MatchEnum.Counters, add: Int) = state.set(type, add)
 }
