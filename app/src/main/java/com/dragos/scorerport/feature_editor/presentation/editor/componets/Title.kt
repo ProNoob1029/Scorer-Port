@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dragos.scorerport.feature_editor.presentation.editor.EditorViewModel
+import com.dragos.scorerport.feature_editor.presentation.util.MeasureView
 import com.dragos.scorerport.impl.freightfrenzy.MatchEnum
 
 @Composable
@@ -38,21 +39,40 @@ fun Title (
             .fillMaxWidth(),
         color = surfaceColor
     ) {
-        Row(
+        MeasureView(
             modifier = Modifier.padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.Bottom
-        ) {
-            Text(
-                modifier = Modifier.weight(1f),
-                text = title,
-                style = textStyle,
-                textAlign = TextAlign.Start
-            )
-            Text(
-                text = "$counter",
-                style = textStyle.copy(fontFeatureSettings = "tnum"),
-                textAlign = TextAlign.End
-            )
+            viewToMeasure = {
+                Text(
+                    text = "$title$counter",
+                    style = textStyle
+                )
+            }
+        ) { maxWidth, measuredWidth, _ ->
+            val compact = maxWidth < measuredWidth
+            if (compact) {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = "$title$counter",
+                    style = textStyle.copy(fontFeatureSettings = "tnum"),
+                    textAlign = TextAlign.Center
+                )
+            } else {
+                Row(
+                    verticalAlignment = Alignment.Bottom
+                ) {
+                    Text(
+                        modifier = Modifier.weight(1f),
+                        text = title,
+                        style = textStyle,
+                        textAlign = TextAlign.Start
+                    )
+                    Text(
+                        text = "$counter",
+                        style = textStyle.copy(fontFeatureSettings = "tnum"),
+                        textAlign = TextAlign.End
+                    )
+                }
+            }
         }
     }
 }

@@ -91,7 +91,7 @@ internal fun Counter (
     val view = LocalView.current
     Row(
         modifier = modifier
-            .width(180.dp)
+            .width(200.dp)
             .height(IntrinsicSize.Max),
         verticalAlignment = Alignment.CenterVertically
     ) {
