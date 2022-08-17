@@ -53,8 +53,11 @@ class EditorState(
         autoHub2.value = item.autoHub2
         autoHub3.value = item.autoHub3
         autoFreightBonus1.value = item.autoFreightBonus1
+        autoFreightBonus2.value = item.autoFreightBonus2
         autoParked1.value = item.autoParked1
+        autoParked2.value = item.autoParked2
         autoFullyParked1.value = item.autoFullyParked1
+        autoFullyParked2.value = item.autoFullyParked2
         driverStorage.value = item.driverStorage
         driverHub1.value = item.driverHub1
         driverHub2.value = item.driverHub2
