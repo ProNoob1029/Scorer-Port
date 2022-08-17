@@ -20,5 +20,5 @@ class EditorViewModel @Inject constructor(
     fun set(type: MatchEnum.Strings, value: String) = state.set(type, value)
     fun set(type: MatchEnum.Booleans, value: Boolean) = state.set(type, value)
     fun set(type: MatchEnum.Ints, value: Int) = state.set(type, value)
-    fun set(type: MatchEnum.Counters, add: Int) = state.set(type, add)
+    fun set(type: MatchEnum.Counters, add: Int) = state.add(type, add)
 }
