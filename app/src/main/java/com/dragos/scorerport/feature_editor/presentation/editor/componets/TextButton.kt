@@ -28,24 +28,33 @@ fun TextButton (
 ) {
     val activeIndex by rememberSaveable { viewModel.get(type) }
 
-    Measure(
-        modifier = modifier.padding(paddingValues),
-        label = label,
-        buttons = buttons,
-        textStyle = textStyle
-    ) { modifier1, modifier2 ->
-        Text(modifier = modifier1, text = label, style = textStyle)
-        SegmentedButton(
-            modifier = modifier2,
-            items = buttons,
-            selectedIndex = activeIndex.convert(),
-            onItemClick = {
-                viewModel.set(
-                    type = type,
-                    value = if (it + 1 == activeIndex) 0 else it + 1
-                )
-            }
-        )
+    val visible by rememberSaveable { viewModel.getVisibility(type) }
+
+    val specialColor = rememberSaveable { viewModel.getSpecialColor(type) }
+
+    val color = if (specialColor) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary
+
+    if (visible) {
+        Measure(
+            modifier = modifier.padding(paddingValues),
+            label = label,
+            buttons = buttons,
+            textStyle = textStyle
+        ) { modifier1, modifier2 ->
+            Text(modifier = modifier1, text = label, style = textStyle)
+            SegmentedButton(
+                modifier = modifier2,
+                items = buttons,
+                selectedIndex = activeIndex.convert(),
+                color = color,
+                onItemClick = {
+                    viewModel.set(
+                        type = type,
+                        value = if (it + 1 == activeIndex) 0 else it + 1
+                    )
+                }
+            )
+        }
     }
 }
 

@@ -1,9 +1,11 @@
 package com.dragos.scorerport.feature_editor.presentation.editor.componets
 
 import android.view.HapticFeedbackConstants
+import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,27 +32,48 @@ fun TextSwitch (
 ) {
     val view = LocalView.current
     val checked by rememberSaveable { viewModel.get(type) }
-
-    Measure(
-        modifier = modifier.padding(paddingValues),
-        text = text,
-        textStyle = textStyle
-    ) { modifier1, modifier2 ->
-        Text(modifier = modifier1 ,text = text, style = textStyle, textAlign = TextAlign.Start)
-        Switch(
-            modifier = modifier2,
-            checked = checked,
-            onCheckedChange = {
-                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                viewModel.set(type, it)
-            }
+    val animatedVisible by rememberSaveable { viewModel.getAnimatedVisibility(type) }
+    val visible by rememberSaveable { viewModel.getVisibility(type) }
+    val specialColor = rememberSaveable { viewModel.getSpecialColor(type) }
+    val colors = if (specialColor)
+        SwitchDefaults.colors(
+            checkedThumbColor = MaterialTheme.colorScheme.onTertiary,
+            checkedTrackColor = MaterialTheme.colorScheme.tertiary,
+            checkedBorderColor = MaterialTheme.colorScheme.tertiary
         )
+    else
+        SwitchDefaults.colors()
+
+    if (visible) {
+        AnimatedVisibility(
+            modifier = modifier.padding(paddingValues),
+            visible = animatedVisible,
+            enter = fadeIn() + slideInVertically(),
+            exit = fadeOut() + slideOutVertically()
+        ) {
+            Measure(
+                text = text,
+                textStyle = textStyle
+            ) { modifier1, modifier2 ->
+                Text(modifier = modifier1 ,text = text, style = textStyle, textAlign = TextAlign.Start)
+                Switch(
+                    modifier = modifier2,
+                    checked = checked,
+                    colors = colors,
+                    onCheckedChange = {
+                        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                        viewModel.set(type, it)
+                    }
+                )
+            }
+        }
     }
+
 }
 
 @Composable
 internal fun Measure (
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     text: String,
     textStyle: TextStyle,
     content: @Composable (modifier: Modifier, modifier2: Modifier) -> Unit

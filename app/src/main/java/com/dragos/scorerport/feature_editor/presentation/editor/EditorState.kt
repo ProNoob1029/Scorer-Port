@@ -33,14 +33,97 @@ class EditorState(
     private val endParked2 = mutableStateOf(match.endParked2)
     private val endCapping = mutableStateOf(match.endCapping)
 
-    private val team2 = mutableStateOf(match.team2)
-    //private val team1 = mutableStateOf(!match.team2)
+    val team2 = mutableStateOf(match.team2)
+    val team1 = mutableStateOf(!match.team2)
 
     private val autoPoints = mutableStateOf(0)
     private val driverPoints = mutableStateOf(0)
     private val endPoints = mutableStateOf(0)
     private val totalPoints = mutableStateOf(0)
 
+    val autoFullyParkedVisible1 = mutableStateOf(match.autoParked1 != 0)
+    val autoFullyParkedVisible2 = mutableStateOf(match.autoParked2 != 0)
+
+    fun set(item: MatchModel) {
+        title.value = item.title
+        alliance.value = item.alliance
+        autoDuck.value = item.autoDuck
+        autoStorage.value = item.autoStorage
+        autoHub1.value = item.autoHub1
+        autoHub2.value = item.autoHub2
+        autoHub3.value = item.autoHub3
+        autoFreightBonus1.value = item.autoFreightBonus1
+        autoParked1.value = item.autoParked1
+        autoFullyParked1.value = item.autoFullyParked1
+        driverStorage.value = item.driverStorage
+        driverHub1.value = item.driverHub1
+        driverHub2.value = item.driverHub2
+        driverHub3.value = item.driverHub3
+        driverShared.value = item.driverShared
+        endDucks.value = item.endDucks
+        endBalanced.value = item.endBalanced
+        endLeaning.value = item.endLeaning
+        endParked1.value = item.endParked1
+        endParked2.value = item.endParked2
+        endCapping.value = item.endCapping
+        team2.value = item.team2
+        team1.value = !item.team2
+
+        autoFullyParkedVisible1.value = item.autoParked1 != 0
+        autoFullyParkedVisible2.value = item.autoParked2 != 0
+
+        calculatePoints()
+    }
+
+    init {
+        calculatePoints()
+    }
+
+    private fun calculatePoints() {
+        calculateAutoPoints()
+        calculateDriverPoints()
+        calculateEndPoints()
+        calculateTotal()
+    }
+
+    private fun calculateAutoPoints() {
+        val autoHub = autoHub1.value + autoHub2.value + autoHub3.value
+        autoPoints.value =
+            autoDuck.value.toInt() * 10 +
+                    autoFreightBonus1.value * 10 +
+                    autoFreightBonus2.value * 10 * team2.value.toInt() +
+                    autoStorage.value * 2 + autoHub * 6 +
+                    when(autoParked1.value) {
+                        1 -> 3
+                        2 -> 5
+                        else -> 0
+                    } * (autoFullyParked1.value.toInt() + 1) +
+                    when(autoParked2.value) {
+                        1 -> 3
+                        2 -> 5
+                        else -> 0
+                    } * (autoFullyParked2.value.toInt() + 1) * team2.value.toInt()
+    }
+    private fun calculateDriverPoints() {
+        driverPoints.value =
+            driverStorage.value +
+                    driverHub1.value * 2 +
+                    driverHub2.value * 4 +
+                    driverHub3.value * 6 +
+                    driverShared.value * 4
+    }
+    private fun calculateEndPoints() {
+        endPoints.value =
+            endDucks.value * 6 +
+                    endBalanced.value.toInt() * 10 +
+                    endLeaning.value.toInt() * 20 +
+                    endCapping.value * 15 +
+                    endParked1.value * 3 +
+                    endParked2.value * 3 * team2.value.toInt()
+    }
+    private fun calculateTotal() {
+        totalPoints.value = autoPoints.value + driverPoints.value + endPoints.value
+    }
 
     fun set(type: MatchEnum.Strings, value: String) {
         when(type) {
@@ -50,64 +133,190 @@ class EditorState(
 
     fun set(type: MatchEnum.Booleans, value: Boolean) {
         when(type) {
-            MatchEnum.Booleans.Title -> team2.value = value
-            MatchEnum.Booleans.AutoDuck -> autoDuck.value = value
-            MatchEnum.Booleans.AutoFullyParked -> autoFullyParked1.value = value
-            MatchEnum.Booleans.AutoFullyParked1 -> autoFullyParked1.value = value
-            MatchEnum.Booleans.AutoFullyParked2 -> autoFullyParked2.value = value
-            MatchEnum.Booleans.EndBalanced -> endBalanced.value = value
-            MatchEnum.Booleans.EndLeaning -> endLeaning.value = value
+            MatchEnum.Booleans.Title -> {
+                team2.value = value
+                team1.value = !value
+                calculateAutoPoints()
+                calculateEndPoints()
+            }
+            MatchEnum.Booleans.AutoDuck -> {
+                autoDuck.value = value
+                calculateAutoPoints()
+            }
+            MatchEnum.Booleans.AutoFullyParked -> {
+                autoFullyParked1.value = value
+                calculateAutoPoints()
+            }
+            MatchEnum.Booleans.AutoFullyParked1 -> {
+                autoFullyParked1.value = value
+                calculateAutoPoints()
+            }
+            MatchEnum.Booleans.AutoFullyParked2 -> {
+                autoFullyParked2.value = value
+                calculateAutoPoints()
+            }
+            MatchEnum.Booleans.EndBalanced -> {
+                endBalanced.value = value
+                calculateEndPoints()
+            }
+            MatchEnum.Booleans.EndLeaning -> {
+                endLeaning.value = value
+                calculateEndPoints()
+            }
         }
+        calculateTotal()
     }
 
     fun set(type: MatchEnum.Ints, value: Int) {
         when(type) {
             MatchEnum.Ints.Alliance -> alliance.value = value
             MatchEnum.Ints.AutoTitle -> autoPoints.value = value
-            MatchEnum.Ints.AutoFreightBonus -> autoFreightBonus1.value = value
-            MatchEnum.Ints.AutoFreightBonus1 -> autoFreightBonus1.value = value
-            MatchEnum.Ints.AutoFreightBonus2 -> autoFreightBonus2.value = value
-            MatchEnum.Ints.AutoParked -> autoParked1.value = value
-            MatchEnum.Ints.AutoParked1 -> autoParked1.value = value
-            MatchEnum.Ints.AutoParked2 -> autoParked2.value = value
+            MatchEnum.Ints.AutoFreightBonus -> {
+                autoFreightBonus1.value = value
+                calculateAutoPoints()
+                calculateTotal()
+            }
+            MatchEnum.Ints.AutoFreightBonus1 -> {
+                autoFreightBonus1.value = value
+                calculateAutoPoints()
+                calculateTotal()
+            }
+            MatchEnum.Ints.AutoFreightBonus2 -> {
+                autoFreightBonus2.value = value
+                calculateAutoPoints()
+                calculateTotal()
+            }
+            MatchEnum.Ints.AutoParked -> {
+                autoParked1.value = value
+                calculateAutoPoints()
+                calculateTotal()
+            }
+            MatchEnum.Ints.AutoParked1 -> {
+                autoParked1.value = value
+                calculateAutoPoints()
+                calculateTotal()
+            }
+            MatchEnum.Ints.AutoParked2 -> {
+                autoParked2.value = value
+                calculateAutoPoints()
+                calculateTotal()
+            }
             MatchEnum.Ints.DriverTitle -> driverPoints.value = value
             MatchEnum.Ints.EndTitle -> endPoints.value = value
-            MatchEnum.Ints.EndCapping -> endCapping.value = value
-            MatchEnum.Ints.EndParked -> endParked1.value = value
-            MatchEnum.Ints.EndParked1 -> endParked1.value = value
-            MatchEnum.Ints.EndParked2 -> endParked2.value = value
+            MatchEnum.Ints.EndCapping -> {
+                endCapping.value = value
+                calculateEndPoints()
+                calculateTotal()
+            }
+            MatchEnum.Ints.EndParked -> {
+                endParked1.value = value
+                calculateEndPoints()
+                calculateTotal()
+            }
+            MatchEnum.Ints.EndParked1 -> {
+                endParked1.value = value
+                calculateEndPoints()
+                calculateTotal()
+            }
+            MatchEnum.Ints.EndParked2 -> {
+                endParked2.value = value
+                calculateEndPoints()
+                calculateTotal()
+            }
             MatchEnum.Ints.TotalTitle -> totalPoints.value = value
         }
     }
 
     fun set(type: MatchEnum.Counters, value: Int) {
         when(type) {
-            MatchEnum.Counters.AutoStorage -> autoStorage.value = value
-            MatchEnum.Counters.AutoHubL1 -> autoHub1.value = value
-            MatchEnum.Counters.AutoHubL2 -> autoHub2.value = value
-            MatchEnum.Counters.AutoHubL3 -> autoHub3.value = value
-            MatchEnum.Counters.DriverStorage -> driverStorage.value = value
-            MatchEnum.Counters.DriverHub1 -> driverHub1.value = value
-            MatchEnum.Counters.DriverHub2 -> driverHub2.value = value
-            MatchEnum.Counters.DriverHub3 -> driverHub3.value = value
-            MatchEnum.Counters.DriverShared -> driverShared.value = value
-            MatchEnum.Counters.EndDucks -> endDucks.value = value
+            MatchEnum.Counters.AutoStorage -> {
+                autoStorage.value = value
+                calculateAutoPoints()
+            }
+            MatchEnum.Counters.AutoHubL1 -> {
+                autoHub1.value = value
+                calculateAutoPoints()
+            }
+            MatchEnum.Counters.AutoHubL2 -> {
+                autoHub2.value = value
+                calculateAutoPoints()
+            }
+            MatchEnum.Counters.AutoHubL3 -> {
+                autoHub3.value = value
+                calculateAutoPoints()
+            }
+            MatchEnum.Counters.DriverStorage -> {
+                driverStorage.value = value
+                calculateDriverPoints()
+            }
+            MatchEnum.Counters.DriverHub1 -> {
+                driverHub1.value = value
+                calculateDriverPoints()
+            }
+            MatchEnum.Counters.DriverHub2 -> {
+                driverHub2.value = value
+                calculateDriverPoints()
+            }
+            MatchEnum.Counters.DriverHub3 -> {
+                driverHub3.value = value
+                calculateDriverPoints()
+            }
+            MatchEnum.Counters.DriverShared -> {
+                driverShared.value = value
+                calculateDriverPoints()
+            }
+            MatchEnum.Counters.EndDucks -> {
+                endDucks.value = value
+                calculateEndPoints()
+            }
         }
+        calculateTotal()
     }
 
     fun add(type: MatchEnum.Counters, add: Int) {
         when(type) {
-            MatchEnum.Counters.AutoStorage -> autoStorage.value += add
-            MatchEnum.Counters.AutoHubL1 -> autoHub1.value += add
-            MatchEnum.Counters.AutoHubL2 -> autoHub2.value += add
-            MatchEnum.Counters.AutoHubL3 -> autoHub3.value += add
-            MatchEnum.Counters.DriverStorage -> driverStorage.value += add
-            MatchEnum.Counters.DriverHub1 -> driverHub1.value += add
-            MatchEnum.Counters.DriverHub2 -> driverHub2.value += add
-            MatchEnum.Counters.DriverHub3 -> driverHub3.value += add
-            MatchEnum.Counters.DriverShared -> driverShared.value += add
-            MatchEnum.Counters.EndDucks -> endDucks.value += add
+            MatchEnum.Counters.AutoStorage -> {
+                autoStorage.value += add
+                calculateAutoPoints()
+            }
+            MatchEnum.Counters.AutoHubL1 -> {
+                autoHub1.value += add
+                calculateAutoPoints()
+            }
+            MatchEnum.Counters.AutoHubL2 -> {
+                autoHub2.value += add
+                calculateAutoPoints()
+            }
+            MatchEnum.Counters.AutoHubL3 -> {
+                autoHub3.value += add
+                calculateAutoPoints()
+            }
+            MatchEnum.Counters.DriverStorage -> {
+                driverStorage.value += add
+                calculateDriverPoints()
+            }
+            MatchEnum.Counters.DriverHub1 -> {
+                driverHub1.value += add
+                calculateDriverPoints()
+            }
+            MatchEnum.Counters.DriverHub2 -> {
+                driverHub2.value += add
+                calculateDriverPoints()
+            }
+            MatchEnum.Counters.DriverHub3 -> {
+                driverHub3.value += add
+                calculateDriverPoints()
+            }
+            MatchEnum.Counters.DriverShared -> {
+                driverShared.value += add
+                calculateDriverPoints()
+            }
+            MatchEnum.Counters.EndDucks -> {
+                endDucks.value += add
+                calculateEndPoints()
+            }
         }
+        calculateTotal()
     }
 
     fun get(type: MatchEnum.Strings): MutableState<String> {
@@ -139,7 +348,7 @@ class EditorState(
             MatchEnum.Ints.AutoParked1 -> autoParked1
             MatchEnum.Ints.AutoParked2 -> autoParked2
             MatchEnum.Ints.DriverTitle -> driverPoints
-            MatchEnum.Ints.EndTitle -> driverPoints
+            MatchEnum.Ints.EndTitle -> endPoints
             MatchEnum.Ints.EndCapping -> endCapping
             MatchEnum.Ints.EndParked -> endParked1
             MatchEnum.Ints.EndParked1 -> endParked1
@@ -162,4 +371,6 @@ class EditorState(
             MatchEnum.Counters.EndDucks -> endDucks
         }
     }
+
+    private fun Boolean.toInt() = if (this) 1 else 0
 }
