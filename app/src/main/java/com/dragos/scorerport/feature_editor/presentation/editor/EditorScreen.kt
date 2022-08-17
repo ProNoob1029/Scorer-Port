@@ -93,14 +93,7 @@ fun EditorScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar (
-                navigationIcon = {},
-                title = {
-                    Text(
-                        text = "New Match",
-                        style = MaterialTheme.typography.headlineMedium
-                    )
-                },
-                actions = {
+                navigationIcon = {
                     Surface(
                         checked = checked,
                         onCheckedChange = {
@@ -120,6 +113,14 @@ fun EditorScreen(
                             textAlign = TextAlign.Center
                         )
                     }
+                },
+                title = {
+                    Text(
+                        text = "New Match",
+                        style = MaterialTheme.typography.headlineMedium
+                    )
+                },
+                actions = {
                     IconButton(
                         onClick = {
                             view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
