@@ -117,7 +117,8 @@ fun EditorScreen(
                 title = {
                     Text(
                         text = "New Match",
-                        style = MaterialTheme.typography.headlineMedium
+                        style = MaterialTheme.typography.headlineMedium,
+                        textAlign = TextAlign.Center
                     )
                 },
                 actions = {
