@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dragos.scorerport.ScorerApp
-import com.dragos.scorerport.feature_editor.domain.use_case.ListUseCases
+import com.dragos.scorerport.feature_editor.domain.use_case.MatchUseCases
 import com.dragos.scorerport.feature_editor.domain.util.Order
 import com.dragos.scorerport.feature_editor.domain.util.OrderType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ListViewModel @Inject constructor(
-    private val listUseCases: ListUseCases,
+    private val matchUseCases: MatchUseCases,
     val scorerApp: ScorerApp
 ): ViewModel() {
 
@@ -26,7 +26,6 @@ class ListViewModel @Inject constructor(
     private var job: Job? = null
 
     init {
-        listUseCases.changeListLocation(state.value.listLocation)
         getListOrdered(Order.Date(OrderType.Descending))
     }
 
@@ -38,26 +37,12 @@ class ListViewModel @Inject constructor(
                 ){return}
                 getListOrdered(event.order)
             }
-            is ListEvent.SwapLocation -> {
-                if(state.value.listLocation == "test") {
-                    listUseCases.changeListLocation("matchList")
-                    _state.value = state.value.copy(
-                        listLocation = "matchList"
-                    )
-                }
-                else {
-                    listUseCases.changeListLocation("test")
-                    _state.value = state.value.copy(
-                        listLocation = "test"
-                    )
-                }
-            }
         }
     }
 
     private fun getListOrdered(order: Order) {
         job?.cancel()
-        job = listUseCases.getList(order = order)
+        job = matchUseCases.getMatchList(order = order)
             .onEach { newList ->
                 _state.value = state.value.copy(
                     list = newList,

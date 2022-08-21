@@ -1,25 +1,24 @@
 package com.dragos.scorerport.feature_editor.data.repository
 
-import com.dragos.scorerport.feature_editor.domain.model.ListItemModel
-import com.dragos.scorerport.feature_editor.domain.repository.ListRepository
+import com.dragos.scorerport.feature_editor.domain.model.Match
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class TestRepositoryImpl: ListRepository {
-    override fun getList(): Flow<List<ListItemModel>> {
+class TestRepositoryImpl {
+    fun getList(): Flow<List<Match>> {
         return flow {
             emit(
                 listOf(
-                    ListItemModel(
+                    Match(
                         title = "uwu",
-                        timeStamp = 100,
-                        points = 69,
+                        createStamp = 100,
+                        totalPoints = 69,
                         key = "a"
                     ),
-                    ListItemModel(
+                    Match(
                         title = "owo",
-                        timeStamp = 50,
-                        points = 420,
+                        createStamp = 50,
+                        totalPoints = 420,
                         key = "b"
                     )
                 )
@@ -27,7 +26,7 @@ class TestRepositoryImpl: ListRepository {
         }
     }
 
-    override fun changeLocation(location: String) {
+    fun changeLocation(location: String) {
         //TODO("Not yet implemented")
     }
 

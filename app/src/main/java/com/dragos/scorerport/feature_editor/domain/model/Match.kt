@@ -1,9 +1,22 @@
-package com.dragos.scorerport.impl.freightfrenzy
+package com.dragos.scorerport.feature_editor.domain.model
 
-import com.dragos.scorerport.impl.models.ItemModel
+import androidx.annotation.Keep
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.dragos.scorerport.feature_editor.presentation.util.autoId
 
-data class MatchModel(
+@Keep
+@Entity
+data class Match(
+    @PrimaryKey val key: String = autoId(),
+    val version: Int = 0,
+
     val title: String = "",
+    val createStamp: Long = 0,
+    val editStamp: Long = 0,
+    val totalPoints: Int = 0,
+
+    val team2: Boolean = false,
     val alliance: Int = 0,
     val autoDuck: Boolean = false,
     val autoStorage: Int = 0,
@@ -21,11 +34,10 @@ data class MatchModel(
     val driverHub2: Int = 0,
     val driverHub3: Int = 0,
     val driverShared: Int = 0,
-    val endDucks: Int = 0,
     val endBalanced: Boolean = false,
     val endLeaning: Boolean = false,
-    val endParked1: Int = 0,
-    val endParked2: Int = 0,
+    val endDucks: Int = 0,
     val endCapping: Int = 0,
-    val team2: Boolean = false
-): ItemModel
+    val endParked1: Int = 0,
+    val endParked2: Int = 0
+)

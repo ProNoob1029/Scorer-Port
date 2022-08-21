@@ -1,18 +1,12 @@
 package com.dragos.scorerport.di
 
 import android.app.Application
+import androidx.room.Room
 import com.dragos.scorerport.ScorerApp
-import com.dragos.scorerport.feature_editor.data.data_source.FirebaseDatabase
-import com.dragos.scorerport.feature_editor.data.repository.TestRepositoryImpl
-import com.dragos.scorerport.feature_editor.domain.repository.ListRepository
-import com.dragos.scorerport.feature_editor.domain.use_case.ChangeListLocation
-import com.dragos.scorerport.feature_editor.domain.use_case.GetList
-import com.dragos.scorerport.feature_editor.domain.use_case.ListUseCases
-import com.dragos.scorerport.impl.freightfrenzy.MatchModel
-import com.dragos.scorerport.impl.freightfrenzy.MatchScreen
-import com.dragos.scorerport.impl.freightfrenzy.MatchState
-import com.dragos.scorerport.impl.models.ItemState
-import com.dragos.scorerport.impl.models.Screen
+import com.dragos.scorerport.feature_editor.data.data_source.MatchDatabase
+import com.dragos.scorerport.feature_editor.data.repository.RepositoryImpl
+import com.dragos.scorerport.feature_editor.domain.repository.Repository
+import com.dragos.scorerport.feature_editor.domain.use_case.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,23 +19,29 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideDatabase(scorerApp: ScorerApp): FirebaseDatabase {
-        return FirebaseDatabase(scorerApp)
+    fun provideRoomDatabase(app: ScorerApp): MatchDatabase {
+        return Room.databaseBuilder(
+            app,
+            MatchDatabase::class.java,
+            MatchDatabase.DATABASE_NAME
+        ).build()
     }
 
     @Provides
     @Singleton
-    fun provideListRepository(firebaseDatabase: FirebaseDatabase): ListRepository {
+    fun provideRepository(db: MatchDatabase): Repository {
         //return ListRepositoryImpl(firebaseDatabase)
-        return TestRepositoryImpl()
+        return RepositoryImpl(db.matchDao)
     }
 
     @Provides
     @Singleton
-    fun provideListUseCases(listRepository: ListRepository): ListUseCases {
-        return ListUseCases(
-            getList = GetList(listRepository),
-            changeListLocation = ChangeListLocation(listRepository),
+    fun provideListUseCases(repository: Repository): MatchUseCases {
+        return MatchUseCases(
+            getMatchList = GetMatchList(repository),
+            getMatch = GetMatch(repository),
+            saveMatch = SaveMatch(repository),
+            getMatchFlow = GetMatchFlow(repository)
         )
     }
 
@@ -49,17 +49,5 @@ object AppModule {
     @Singleton
     fun provideApp(application: Application): ScorerApp {
         return application as ScorerApp
-    }
-
-    @Provides
-    @Singleton
-    fun provideItemState(): ItemState {
-        return MatchState(MatchModel())
-    }
-
-    @Provides
-    @Singleton
-    fun provideScreen(): Screen {
-        return MatchScreen()
     }
 }

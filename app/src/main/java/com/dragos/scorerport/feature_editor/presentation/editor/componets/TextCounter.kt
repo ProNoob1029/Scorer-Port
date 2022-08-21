@@ -4,10 +4,13 @@ import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.*
+import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
@@ -17,9 +20,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dragos.scorerport.R
+import com.dragos.scorerport.feature_editor.domain.model.MatchEnum
 import com.dragos.scorerport.feature_editor.presentation.editor.EditorViewModel
 import com.dragos.scorerport.feature_editor.presentation.util.MeasureView
-import com.dragos.scorerport.impl.freightfrenzy.MatchEnum
 
 @Composable
 fun TextCounter (
@@ -30,7 +33,7 @@ fun TextCounter (
     type: MatchEnum.Counters,
     viewModel: EditorViewModel = hiltViewModel()
 ) {
-    val counter by rememberSaveable { viewModel.get(type) }
+    val counter by remember { viewModel.state.get(type) }
 
     Measure(
         modifier = modifier.padding(paddingValues),
@@ -38,12 +41,12 @@ fun TextCounter (
         textStyle = textStyle,
         text = text
     ) { modifier1, modifier2 ->
-        Text(modifier = modifier1 ,text = text, style = textStyle)
+        Text(modifier = modifier1, text = text, style = textStyle)
         Counter(
             modifier = modifier2,
             counter = counter,
             textStyle = textStyle,
-            onClick = { viewModel.set(type, it) }
+            onClick = { viewModel.state.set(type, it) }
         )
     }
 }
@@ -61,7 +64,10 @@ internal fun Measure (
         viewToMeasure = {
             Row {
                 Text(modifier = Modifier.width(IntrinsicSize.Min), text = text, style = textStyle)
-                Counter(counter = counter, textStyle = textStyle, onClick = {})
+                Counter(
+                    counter = counter,
+                    textStyle = textStyle,
+                    onClick = {})
             }
         },
     ) { maxWidth, measuredWidth, _ ->
@@ -79,7 +85,6 @@ internal fun Measure (
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun Counter (
     modifier: Modifier = Modifier,

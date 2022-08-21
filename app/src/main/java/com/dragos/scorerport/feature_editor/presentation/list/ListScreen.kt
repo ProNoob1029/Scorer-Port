@@ -15,12 +15,19 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dragos.scorerport.feature_editor.domain.util.Order
 import com.dragos.scorerport.feature_editor.domain.util.OrderType
+import com.dragos.scorerport.feature_editor.presentation.destinations.EditorScreenDestination
 import com.dragos.scorerport.feature_editor.presentation.list.components.ItemCard
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
+@RootNavGraph(start = true)
+@Destination
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ListScreen(
     viewModel: ListViewModel = hiltViewModel(),
+    destinationsNavigator: DestinationsNavigator
 ) {
     val state = viewModel.state.value
 
@@ -28,7 +35,11 @@ fun ListScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                /*TODO*/
+                    destinationsNavigator.navigate(
+                        EditorScreenDestination(
+                            null
+                        )
+                    )
                 },
                 containerColor = MaterialTheme.colorScheme.primary,
             ) {
@@ -68,9 +79,11 @@ fun ListScreen(
                     item = item,
                     index = index,
                     onClick = {
-                        //viewModel.scorerApp.dynamicColorEnabled = true
-                        //viewModel.onEvent(ListEvent.Order(Order.Date(OrderType.Descending)))
-                        //viewModel.onEvent(ListEvent.SwapLocation)
+                        destinationsNavigator.navigate(
+                            EditorScreenDestination(
+                                item.key
+                            )
+                        )
                     },
                     onHold = {
                         //viewModel.scorerApp.dynamicColorEnabled = false

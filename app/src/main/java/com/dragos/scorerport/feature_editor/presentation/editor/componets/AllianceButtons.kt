@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
@@ -14,9 +14,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.dragos.scorerport.feature_editor.domain.model.MatchEnum
 import com.dragos.scorerport.feature_editor.presentation.editor.EditorViewModel
 import com.dragos.scorerport.feature_editor.presentation.util.MeasureView
-import com.dragos.scorerport.impl.freightfrenzy.MatchEnum
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,7 +34,7 @@ fun AllianceButtons (
     textStyle: TextStyle = MaterialTheme.typography.headlineSmall,
     viewModel: EditorViewModel = hiltViewModel()
 ) {
-    val activeIndex by rememberSaveable { viewModel.get(type) }
+    val activeIndex by remember { viewModel.state.get(type) }
 
     val redActive = activeIndex == 1
     val blueActive = activeIndex == 2
@@ -66,7 +66,7 @@ fun AllianceButtons (
             color = redColor,
             onClick = {
                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                viewModel.set(
+                viewModel.state.set(
                     type,
                     value = if (activeIndex == 1) 0 else 1
                 )
@@ -86,7 +86,7 @@ fun AllianceButtons (
             )
         }
 
-        if(vertical)
+        if (vertical)
             Spacer(modifier = Modifier.height(8.dp))
         else
             Spacer(modifier = Modifier.width(16.dp))
@@ -96,7 +96,7 @@ fun AllianceButtons (
             color = blueColor,
             onClick = {
                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                viewModel.set(
+                viewModel.state.set(
                     type,
                     value = if (activeIndex == 2) 0 else 2
                 )

@@ -5,16 +5,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.dragos.scorerport.feature_editor.domain.model.MatchEnum
 import com.dragos.scorerport.feature_editor.presentation.editor.EditorViewModel
 import com.dragos.scorerport.feature_editor.presentation.util.MeasureView
 import com.dragos.scorerport.feature_editor.presentation.util.SegmentedButton
-import com.dragos.scorerport.impl.freightfrenzy.MatchEnum
 
 @Composable
 fun TextButton (
@@ -26,11 +26,11 @@ fun TextButton (
     type: MatchEnum.Ints,
     viewModel: EditorViewModel = hiltViewModel()
 ) {
-    val activeIndex by rememberSaveable { viewModel.get(type) }
+    val activeIndex by remember { viewModel.state.get(type) }
 
-    val visible by rememberSaveable { viewModel.getVisibility(type) }
+    val visible by remember { viewModel.state.getVisibility(type) }
 
-    val specialColor = rememberSaveable { viewModel.getSpecialColor(type) }
+    val specialColor = remember { viewModel.state.getSpecialColor(type) }
 
     val color = if (specialColor) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary
 
@@ -48,7 +48,7 @@ fun TextButton (
                 selectedIndex = activeIndex.convert(),
                 color = color,
                 onItemClick = {
-                    viewModel.set(
+                    viewModel.state.set(
                         type = type,
                         value = if (it + 1 == activeIndex) 0 else it + 1
                     )

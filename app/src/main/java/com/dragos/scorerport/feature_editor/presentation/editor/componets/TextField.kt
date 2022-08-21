@@ -9,13 +9,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.dragos.scorerport.feature_editor.domain.model.MatchEnum
 import com.dragos.scorerport.feature_editor.presentation.editor.EditorViewModel
 import com.dragos.scorerport.feature_editor.presentation.util.OutlinedTextField
-import com.dragos.scorerport.impl.freightfrenzy.MatchEnum
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,13 +26,13 @@ fun TextField (
     type: MatchEnum.Strings,
     viewModel: EditorViewModel = hiltViewModel(),
 ) {
-    val title by rememberSaveable { viewModel.get(type) }
+    val title by remember { viewModel.state.get(type) }
     OutlinedTextField(
         modifier = modifier
             .fillMaxWidth()
             .padding(paddingValues),
         value = title,
-        onValueChange = { viewModel.set(type, it) },
+        onValueChange = { viewModel.state.set(type, it) },
         label = { Text(text = label) },
         keyboardOptions = KeyboardOptions(autoCorrect = false),
         textStyle = MaterialTheme.typography.titleLarge,

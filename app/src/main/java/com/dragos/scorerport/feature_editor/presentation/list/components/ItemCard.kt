@@ -19,12 +19,12 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.dragos.scorerport.feature_editor.domain.model.ListItemModel
+import com.dragos.scorerport.feature_editor.domain.model.Match
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ItemCard(
-    item: ListItemModel,
+    item: Match,
     index: Int,
     onClick: () -> Unit,
     onHold: () -> Unit,
@@ -36,8 +36,8 @@ fun ItemCard(
     val view = LocalView.current
 
     val newIndex = index + 1
-    val points = item.points
-    val timeStamp = item.timeStamp
+    val points = item.totalPoints
+    val timeStamp = item.createStamp
 
     Surface(
         modifier = modifier

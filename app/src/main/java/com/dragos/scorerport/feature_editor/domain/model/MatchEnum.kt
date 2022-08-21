@@ -1,12 +1,10 @@
-package com.dragos.scorerport.impl.freightfrenzy
+package com.dragos.scorerport.feature_editor.domain.model
 
-import com.dragos.scorerport.impl.models.ItemEnum
-
-class MatchEnum: ItemEnum {
-    enum class Strings: ItemEnum.Strings {
+class MatchEnum {
+    enum class Strings {
         TitleText
     }
-    enum class Booleans: ItemEnum.Booleans {
+    enum class Booleans {
         AutoDuck,
         AutoFullyParked,
         AutoFullyParked1,
@@ -15,7 +13,7 @@ class MatchEnum: ItemEnum {
         EndLeaning,
         Title
     }
-    enum class Ints: ItemEnum.Ints {
+    enum class Ints {
         Alliance,
         AutoFreightBonus,
         AutoFreightBonus1,
@@ -32,7 +30,7 @@ class MatchEnum: ItemEnum {
         EndTitle,
         TotalTitle
     }
-    enum class Counters: ItemEnum.Counters {
+    enum class Counters {
         AutoStorage,
         AutoHubL1,
         AutoHubL2,

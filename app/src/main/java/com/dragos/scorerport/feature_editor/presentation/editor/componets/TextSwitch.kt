@@ -9,7 +9,7 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
@@ -17,9 +17,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.dragos.scorerport.feature_editor.domain.model.MatchEnum
 import com.dragos.scorerport.feature_editor.presentation.editor.EditorViewModel
 import com.dragos.scorerport.feature_editor.presentation.util.MeasureView
-import com.dragos.scorerport.impl.freightfrenzy.MatchEnum
 
 @Composable
 fun TextSwitch (
@@ -31,10 +31,10 @@ fun TextSwitch (
     viewModel: EditorViewModel = hiltViewModel()
 ) {
     val view = LocalView.current
-    val checked by rememberSaveable { viewModel.get(type) }
-    val animatedVisible by rememberSaveable { viewModel.getAnimatedVisibility(type) }
-    val visible by rememberSaveable { viewModel.getVisibility(type) }
-    val specialColor = rememberSaveable { viewModel.getSpecialColor(type) }
+    val checked by remember { viewModel.state.get(type) }
+    val animatedVisible by remember { viewModel.state.getAnimatedVisibility(type) }
+    val visible by remember { viewModel.state.getVisibility(type) }
+    val specialColor = remember { viewModel.state.getSpecialColor(type) }
     val colors = if (specialColor)
         SwitchDefaults.colors(
             checkedThumbColor = MaterialTheme.colorScheme.onTertiary,
@@ -55,14 +55,19 @@ fun TextSwitch (
                 text = text,
                 textStyle = textStyle
             ) { modifier1, modifier2 ->
-                Text(modifier = modifier1 ,text = text, style = textStyle, textAlign = TextAlign.Start)
+                Text(
+                    modifier = modifier1,
+                    text = text,
+                    style = textStyle,
+                    textAlign = TextAlign.Start
+                )
                 Switch(
                     modifier = modifier2,
                     checked = checked,
                     colors = colors,
                     onCheckedChange = {
                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                        viewModel.set(type, it)
+                        viewModel.state.set(type, it)
                     }
                 )
             }
