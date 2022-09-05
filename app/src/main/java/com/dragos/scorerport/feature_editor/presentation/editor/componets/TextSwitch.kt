@@ -3,10 +3,11 @@ package com.dragos.scorerport.feature_editor.presentation.editor.componets
 import android.view.HapticFeedbackConstants
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
-import androidx.compose.material3.Text
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -21,6 +22,7 @@ import com.dragos.scorerport.feature_editor.domain.model.MatchEnum
 import com.dragos.scorerport.feature_editor.presentation.editor.EditorViewModel
 import com.dragos.scorerport.feature_editor.presentation.util.MeasureView
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun TextSwitch (
     modifier: Modifier = Modifier,
@@ -32,6 +34,7 @@ fun TextSwitch (
 ) {
     val view = LocalView.current
     val checked by remember { viewModel.state.get(type) }
+    val enabled by remember { viewModel.editEnabled }
     val animatedVisible by remember { viewModel.state.getAnimatedVisibility(type) }
     val visible by remember { viewModel.state.getVisibility(type) }
     val specialColor = remember { viewModel.state.getSpecialColor(type) }
@@ -45,31 +48,74 @@ fun TextSwitch (
         SwitchDefaults.colors()
 
     if (visible) {
-        AnimatedVisibility(
+        AnimatedContent(
             modifier = modifier.padding(paddingValues),
-            visible = animatedVisible,
-            enter = fadeIn() + slideInVertically(),
-            exit = fadeOut() + slideOutVertically()
-        ) {
-            Measure(
-                text = text,
-                textStyle = textStyle
-            ) { modifier1, modifier2 ->
-                Text(
-                    modifier = modifier1,
+            targetState = animatedVisible,
+            transitionSpec = {
+                (slideInVertically() with slideOutVertically()).using(
+                    SizeTransform(clip = true)
+                )
+            },
+        ) { targetState ->
+            if (targetState) {
+                Measure(
                     text = text,
-                    style = textStyle,
-                    textAlign = TextAlign.Start
-                )
-                Switch(
-                    modifier = modifier2,
-                    checked = checked,
-                    colors = colors,
-                    onCheckedChange = {
-                        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                        viewModel.state.set(type, it)
+                    textStyle = textStyle
+                ) { modifier1, modifier2 ->
+                    Text(
+                        modifier = modifier1,
+                        text = text,
+                        style = textStyle,
+                        textAlign = TextAlign.Start
+                    )
+
+                    AnimatedContent(
+                        targetState = enabled,
+                        transitionSpec = {
+                            if (enabled) {
+                                slideInHorizontally { fullWidth -> fullWidth } + fadeIn() with
+                                        slideOutHorizontally { fullWidth -> -fullWidth } + fadeOut()
+                            } else {
+                                slideInHorizontally { fullWidth -> -fullWidth } + fadeIn() with
+                                        slideOutHorizontally { fullWidth -> fullWidth } + fadeOut()
+                            }.using(
+                                // Disable clipping since the faded slide-in/out should
+                                // be displayed out of bounds.
+                                SizeTransform(clip = false)
+                            )
+                        }
+                    ) { targetState2 ->
+                        if (targetState2) {
+                            Switch(
+                                modifier = modifier2,
+                                checked = checked,
+                                colors = colors,
+                                onCheckedChange = {
+                                    view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                    viewModel.state.set(type, it)
+                                }
+                            )
+                        } else {
+                            Surface(
+                                modifier = modifier2
+                                    .padding(vertical = 8.dp)
+                                    .size(52.dp, 32.dp),
+                                color = if (specialColor)
+                                    MaterialTheme.colorScheme.tertiaryContainer
+                                else MaterialTheme.colorScheme.primaryContainer,
+                                shape = CircleShape
+                            ) {
+                                if (checked) {
+                                    Icon(imageVector = Icons.Default.Check, contentDescription = "Checked")
+                                } else {
+                                    Icon(imageVector = Icons.Default.Close, contentDescription = "Not checked")
+                                }
+                            }
+                        }
                     }
-                )
+
+
+                }
             }
         }
     }
@@ -77,7 +123,7 @@ fun TextSwitch (
 }
 
 @Composable
-internal fun Measure (
+private fun Measure (
     modifier: Modifier = Modifier,
     text: String,
     textStyle: TextStyle,

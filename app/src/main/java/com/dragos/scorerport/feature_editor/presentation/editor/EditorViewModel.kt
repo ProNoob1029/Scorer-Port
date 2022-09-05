@@ -1,5 +1,7 @@
 package com.dragos.scorerport.feature_editor.presentation.editor
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,7 +24,14 @@ class EditorViewModel @Inject constructor(
 
     private var startMatch: Match? = null
 
-    val state = NewState(editEnabled = key == null)
+    val state = NewState()
+
+    private val _editEnabled = mutableStateOf(false)
+    val editEnabled: State<Boolean> = _editEnabled
+
+    fun setEnabled(enabled: Boolean) {
+        _editEnabled.value = enabled
+    }
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()

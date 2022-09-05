@@ -7,7 +7,7 @@ import com.dragos.scorerport.feature_editor.domain.model.Match
     entities = [Match::class],
     version = 1
 )
-abstract class MatchDatabase: RoomDatabase() {
+abstract class  MatchDatabase: RoomDatabase() {
 
     abstract val matchDao: MatchDao
 

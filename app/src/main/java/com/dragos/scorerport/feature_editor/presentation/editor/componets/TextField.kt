@@ -7,6 +7,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -26,6 +27,14 @@ fun TextField (
     type: MatchEnum.Strings,
     viewModel: EditorViewModel = hiltViewModel(),
 ) {
+    val enabled by remember { viewModel.editEnabled }
+
+    val colors = TextFieldDefaults.outlinedTextFieldColors(
+        //disabledBorderColor = MaterialTheme.colorScheme.outline,
+        //disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        disabledTextColor = MaterialTheme.colorScheme.onSurface
+    )
+
     val title by remember { viewModel.state.get(type) }
     OutlinedTextField(
         modifier = modifier
@@ -36,6 +45,8 @@ fun TextField (
         label = { Text(text = label) },
         keyboardOptions = KeyboardOptions(autoCorrect = false),
         textStyle = MaterialTheme.typography.titleLarge,
-        labelBodySmall = MaterialTheme.typography.titleMedium
+        smallTextStyle = MaterialTheme.typography.titleMedium,
+        enabled = enabled,
+        colors = colors
     )
 }

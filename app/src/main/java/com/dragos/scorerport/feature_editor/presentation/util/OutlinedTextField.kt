@@ -3,13 +3,8 @@ package com.dragos.scorerport.feature_editor.presentation.util
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
-import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
-import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
@@ -18,15 +13,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.lerp
-import androidx.compose.ui.unit.dp
 
-@OptIn(ExperimentalMaterial3Api::class)
+@ExperimentalMaterial3Api
 @Composable
 fun OutlinedTextField(
     value: String,
@@ -35,9 +27,8 @@ fun OutlinedTextField(
     enabled: Boolean = true,
     readOnly: Boolean = false,
     textStyle: TextStyle = LocalTextStyle.current,
-    label: @Composable (() -> Unit),
-    labelBodySmall: TextStyle,
-    labelBodyLarge: TextStyle = textStyle,
+    smallTextStyle: TextStyle,
+    label: @Composable (() -> Unit)? = null,
     placeholder: @Composable (() -> Unit)? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
@@ -48,70 +39,42 @@ fun OutlinedTextField(
     singleLine: Boolean = false,
     maxLines: Int = Int.MAX_VALUE,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    shape: Shape = RoundedCornerShape(4.0.dp),
+    shape: Shape = TextFieldDefaults.outlinedShape,
     colors: TextFieldColors = TextFieldDefaults.outlinedTextFieldColors()
 ) {
-    // If color is not provided via the text style, use content color as a default
-    val textColor = textStyle.color.takeOrElse {
-        colors.textColor(enabled).value
-    }
-    val mergedTextStyle = textStyle.merge(TextStyle(color = textColor))
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    (BasicTextField(
+    OutlinedTextField(
         value = value,
-        modifier = modifier
-            .padding(top = 8.dp)
-            .background(colors.containerColor(enabled).value, shape)
-            .defaultMinSize(
-                minWidth = TextFieldDefaults.MinWidth,
-                minHeight = TextFieldDefaults.MinHeight
-            ),
         onValueChange = onValueChange,
+        modifier = modifier,
         enabled = enabled,
         readOnly = readOnly,
-        textStyle = mergedTextStyle,
-        cursorBrush = SolidColor(colors.cursorColor(isError).value),
+        textStyle = textStyle,
+        label = {
+            if (label != null) {
+                MyLabel(
+                    visualTransformation = visualTransformation,
+                    value = value,
+                    interactionSource = interactionSource,
+                    label = label,
+                    bodyLarge = textStyle,
+                    bodySmall = smallTextStyle
+                )
+            }
+        },
+        placeholder = placeholder,
+        leadingIcon = leadingIcon,
+        trailingIcon = trailingIcon,
+        isError = isError,
         visualTransformation = visualTransformation,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
-        interactionSource = interactionSource,
         singleLine = singleLine,
         maxLines = maxLines,
-        decorationBox = @Composable { innerTextField ->
-            TextFieldDefaults.OutlinedTextFieldDecorationBox(
-                value = value,
-                visualTransformation = visualTransformation,
-                innerTextField = innerTextField,
-                placeholder = placeholder,
-                label = {
-                    MyLabel(
-                        value = value,
-                        label = label,
-                        interactionSource = interactionSource,
-                        bodySmall = labelBodySmall,
-                        bodyLarge = labelBodyLarge,
-                        visualTransformation = visualTransformation
-                    ) },
-                leadingIcon = leadingIcon,
-                trailingIcon = trailingIcon,
-                singleLine = singleLine,
-                enabled = enabled,
-                isError = isError,
-                interactionSource = interactionSource,
-                colors = colors,
-                border = {
-                    TextFieldDefaults.BorderBox(
-                        enabled,
-                        isError,
-                        interactionSource,
-                        colors,
-                        shape
-                    )
-                }
-            )
-        }
-    ))
+        interactionSource = interactionSource,
+        shape = shape,
+        colors = colors
+    )
 }
 
 //@OptIn(ExperimentalMaterial3Api::class)
@@ -124,6 +87,7 @@ internal fun MyLabel (
     bodySmall: TextStyle = MaterialTheme.typography.bodySmall,
     bodyLarge: TextStyle = MaterialTheme.typography.bodyLarge,
 ) {
+
     val transformedText = remember(value, visualTransformation) {
         visualTransformation.filter(AnnotatedString(value))
     }.text.text

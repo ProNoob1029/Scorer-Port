@@ -7,15 +7,8 @@ import com.dragos.scorerport.feature_editor.domain.model.Match
 import com.dragos.scorerport.feature_editor.domain.model.MatchEnum
 
 class NewState(
-    match: Match = Match(),
-    editEnabled: Boolean
+    match: Match = Match()
 ) {
-    private val _editEnabled = mutableStateOf(editEnabled)
-    val editEnabled: State<Boolean> = _editEnabled
-
-    fun setEnabled(enabled: Boolean) {
-        _editEnabled.value = enabled
-    }
 
     private val matchState = MatchState(match)
 

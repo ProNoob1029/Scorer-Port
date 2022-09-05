@@ -36,19 +36,37 @@ fun AllianceButtons (
 ) {
     val activeIndex by remember { viewModel.state.get(type) }
 
+    val enabled by remember { viewModel.editEnabled }
+
     val redActive = activeIndex == 1
     val blueActive = activeIndex == 2
     val redColor by animateColorAsState(
-        targetValue = if (redActive) Color.Red else MaterialTheme.colorScheme.secondaryContainer
+        targetValue = if (redActive)
+            Color.Red
+        else if (enabled)
+            MaterialTheme.colorScheme.secondaryContainer
+        else MaterialTheme.colorScheme.surfaceVariant
     )
     val blueColor by animateColorAsState(
-        targetValue = if (blueActive) Color.Blue else MaterialTheme.colorScheme.secondaryContainer
+        targetValue = if (blueActive)
+            Color.Blue
+        else if (enabled)
+            MaterialTheme.colorScheme.secondaryContainer
+        else MaterialTheme.colorScheme.surfaceVariant
     )
     val redTextColor by animateColorAsState(
-        targetValue = if (redActive) Color.White else LocalContentColor.current
+        targetValue = if (redActive)
+            Color.White
+        else if (enabled)
+            contentColorFor(backgroundColor = MaterialTheme.colorScheme.secondaryContainer)
+        else contentColorFor(backgroundColor = MaterialTheme.colorScheme.surfaceVariant)
     )
     val blueTextColor by animateColorAsState(
-        targetValue = if (blueActive) Color.White else LocalContentColor.current
+        targetValue = if (blueActive)
+            Color.White
+        else if (enabled)
+            contentColorFor(backgroundColor = MaterialTheme.colorScheme.secondaryContainer)
+        else contentColorFor(backgroundColor = MaterialTheme.colorScheme.surfaceVariant)
     )
 
     val view = LocalView.current
@@ -73,6 +91,7 @@ fun AllianceButtons (
             },
             shape = MaterialTheme.shapes.large,
             contentColor = redTextColor,
+            enabled = enabled
         ) {
             Text(
                 text = firstText,
@@ -103,6 +122,7 @@ fun AllianceButtons (
             },
             shape = MaterialTheme.shapes.large,
             contentColor = blueTextColor,
+            enabled = enabled
         ) {
             Text(
                 text = secondText,
